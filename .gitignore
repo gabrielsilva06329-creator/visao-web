@@ -1,0 +1,10 @@
+# Local Claude Code skill files (not project source)
+skills/
+
+# OS junk
+Thumbs.db
+.DS_Store
+
+# Editor temp
+*.swp
+*~

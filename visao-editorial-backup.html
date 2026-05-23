@@ -1,0 +1,1708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VISÃO — Embroidered. Limited. Worn by those who notice.</title>
+  <meta name="description" content="VISÃO. Wearable embroidered art. Limited drops from a Brazilian heritage, Japanese-influenced streetwear label.">
+
+  <!-- =======================================================================
+       FONTS · Fraunces (display serif) + Manrope (body sans)
+       Free via Google Fonts. Distinctive, premium, won't read as "AI default."
+       ======================================================================= -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400;1,9..144,500&family=Manrope:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- =======================================================================
+       SHOPIFY BUY BUTTON SDK
+       Uncomment when ready to wire payments.
+       The SDK loads once globally and powers ALL product buttons on the page.
+       ======================================================================= -->
+  <!-- <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script> -->
+
+  <style>
+    /* =======================================================================
+       VISÃO · DESIGN SYSTEM
+       Every reusable token lives in :root. Change here, updates everywhere.
+
+       PALETTE STRATEGY:
+       - Main brand: warm charcoal + cream + signature gold (Derschutze-tier minimal)
+       - Brazil capsule accent: deep emerald + terracotta (used sparingly)
+       - Japan capsule accent: soft red/black (TODO: define when first JP drop ships)
+       ======================================================================= */
+
+    :root {
+      /* — Surface — */
+      --bg-primary:    #0a0a0a;       /* main page background */
+      --bg-secondary:  #141414;       /* cards, alternate sections */
+      --bg-tertiary:   #1c1c1c;       /* hover states, deeper panels */
+      --bg-elevated:   #232323;       /* modals, drawers */
+
+      /* — Type — */
+      --text-primary:   #f0ebe0;      /* warm unbleached cream */
+      --text-secondary: #8a8479;      /* aged parchment */
+      --text-muted:     #545049;      /* labels, captions */
+
+      /* — Accents — */
+      --accent-gold:        #c9a961;  /* signature — used sparingly for impact */
+      --accent-gold-dim:    #8a7340;
+      --accent-emerald:     #2d4f3d;  /* Brazil capsule only */
+      --accent-terracotta:  #a85a3d;  /* Brazil capsule only */
+
+      /* — Borders & Effects — */
+      --border:        rgba(240, 235, 224, 0.08);
+      --border-strong: rgba(240, 235, 224, 0.18);
+      --shadow-lift:   0 24px 48px -12px rgba(0, 0, 0, 0.5);
+
+      /* — Type families — */
+      --font-display: 'Fraunces', 'Times New Roman', serif;
+      --font-body:    'Manrope', system-ui, -apple-system, sans-serif;
+
+      /* — Spacing scale — */
+      --s-1:  0.5rem;
+      --s-2:  1rem;
+      --s-3:  1.5rem;
+      --s-4:  2rem;
+      --s-6:  3rem;
+      --s-8:  4rem;
+      --s-12: 6rem;
+      --s-16: 8rem;
+      --s-24: 12rem;
+
+      /* — Motion — */
+      --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in:    cubic-bezier(0.7, 0, 0.84, 0);
+      --ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+
+      /* — Layout — */
+      --container: 1440px;
+      --gutter:    3rem;
+    }
+
+    @media (max-width: 768px) {
+      :root { --gutter: 1.5rem; }
+    }
+
+    /* =======================================================================
+       RESET / BASE
+       ======================================================================= */
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      background: var(--bg-primary);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Film grain overlay — tactile, expensive feel. Subtle. */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+      opacity: 0.04;
+      pointer-events: none;
+      z-index: 1000;
+      mix-blend-mode: overlay;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { background: none; border: none; color: inherit; cursor: pointer; font: inherit; }
+    img, svg { max-width: 100%; display: block; }
+
+    /* =======================================================================
+       UTILITY · LABEL
+       Small caps eyebrow used throughout
+       ======================================================================= */
+
+    .label {
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+    }
+
+    .label.line-before::before,
+    .label.line-after::after {
+      content: '';
+      width: 2rem; height: 1px;
+      background: var(--accent-gold);
+      opacity: 0.5;
+    }
+
+    /* =======================================================================
+       UTILITY · BUTTONS
+       ======================================================================= */
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--s-2);
+      padding: 1.1rem 2.5rem;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-family: var(--font-body);
+      border: 1px solid currentColor;
+      cursor: pointer;
+      transition: all 0.5s var(--ease-out);
+      white-space: nowrap;
+    }
+
+    .btn-gold {
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+      border-color: var(--accent-gold);
+    }
+    .btn-gold:hover {
+      background: transparent;
+      color: var(--accent-gold);
+      letter-spacing: 0.36em;
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+    .btn-ghost:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      letter-spacing: 0.36em;
+    }
+
+    .btn-link {
+      background: none;
+      border: none;
+      padding: 0;
+      color: var(--text-secondary);
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      transition: color 0.3s ease, gap 0.4s var(--ease-out);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+    }
+    .btn-link:hover { color: var(--accent-gold); gap: var(--s-3); }
+    .btn-link::after { content: '→'; transition: transform 0.4s var(--ease-out); }
+    .btn-link:hover::after { transform: translateX(4px); }
+
+    /* =======================================================================
+       1 · ANNOUNCEMENT BAR
+       Sticky top bar for drops, free shipping thresholds, etc.
+       ======================================================================= */
+
+    .announcement-bar {
+      background: var(--bg-secondary);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 0.7rem var(--gutter);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+      z-index: 50;
+    }
+
+    .announcement-bar strong {
+      color: var(--accent-gold);
+      font-weight: 500;
+    }
+
+    /* =======================================================================
+       2 · NAVIGATION
+       Three-column grid: left links / centered logo / right utilities
+       Mobile: hamburger replaces left links
+       ======================================================================= */
+
+    nav.main-nav {
+      position: sticky; top: 0;
+      z-index: 50;
+      padding: 1.2rem var(--gutter);
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(24px) saturate(1.4);
+      -webkit-backdrop-filter: blur(24px) saturate(1.4);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-left, .nav-right { display: flex; align-items: center; }
+    .nav-left { justify-self: start; gap: var(--s-6); }
+    .nav-center { justify-self: center; }
+    .nav-right { justify-self: end; gap: var(--s-4); }
+
+    .logo {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.7rem;
+      letter-spacing: 0.06em;
+      font-variation-settings: 'opsz' 144;
+      color: var(--text-primary);
+    }
+
+    .logo .tilde {
+      display: inline-block;
+      color: var(--accent-gold);
+      font-style: italic;
+      font-weight: 400;
+      transform: translateY(-0.12em) scale(1.25);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: var(--s-6);
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      position: relative;
+      transition: color 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px; left: 0;
+      width: 0; height: 1px;
+      background: var(--accent-gold);
+      transition: width 0.4s var(--ease-out);
+    }
+    .nav-links a:hover::after { width: 100%; }
+
+    .icon-btn {
+      width: 2.5rem; height: 2.5rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      color: var(--text-primary);
+      transition: color 0.3s ease;
+      position: relative;
+    }
+    .icon-btn:hover { color: var(--accent-gold); }
+
+    .cart-count {
+      position: absolute;
+      top: 4px; right: 2px;
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+      width: 1.1rem; height: 1.1rem;
+      border-radius: 50%;
+      font-size: 0.6rem;
+      font-weight: 600;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: transform 0.3s var(--ease-out);
+    }
+    .cart-count.bump { animation: bump 0.4s var(--ease-out); }
+
+    @keyframes bump {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    .hamburger {
+      display: none;
+      width: 2.5rem; height: 2.5rem;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      padding: 0;
+    }
+    .hamburger span {
+      width: 1.4rem; height: 1px;
+      background: var(--text-primary);
+    }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .hamburger { display: inline-flex; }
+    }
+
+    /* =======================================================================
+       3 · HERO
+       Editorial. Lead with the brand mark + the drop tease.
+       Background slot for hero imagery (close-up embroidery shot).
+       ======================================================================= */
+
+    .hero {
+      min-height: calc(100vh - 60px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      padding: var(--s-8) var(--gutter);
+      overflow: hidden;
+    }
+
+    /* TODO: replace this gradient placeholder with a real hero image */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 30% 40%, rgba(201, 169, 97, 0.08), transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(45, 79, 61, 0.1), transparent 50%),
+        var(--bg-primary);
+      z-index: 0;
+    }
+    .hero-bg::after {
+      content: 'HERO IMAGE · Close-up embroidery shot (1920×1200 recommended)';
+      position: absolute;
+      bottom: 1rem; left: 50%;
+      transform: translateX(-50%);
+      color: var(--text-muted);
+      font-style: italic;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      opacity: 0.4;
+    }
+
+    /* Massive decorative italic letters in background — VISÃO's visual signature */
+    .hero-deco {
+      position: absolute;
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 200;
+      color: var(--bg-secondary);
+      font-size: clamp(12rem, 30vw, 32rem);
+      user-select: none;
+      pointer-events: none;
+      line-height: 0.78;
+      opacity: 0.4;
+      z-index: 1;
+    }
+    .hero-deco.tl { top: -4rem; left: -3rem; }
+    .hero-deco.br { bottom: -6rem; right: -2rem; transform: rotate(8deg); }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      max-width: 1100px;
+    }
+
+    .hero-label {
+      margin-bottom: var(--s-4);
+      opacity: 0;
+      animation: fadeUp 1.4s 0.3s var(--ease-out) forwards;
+    }
+    .hero-label::before, .hero-label::after {
+      content: '';
+      width: 2rem; height: 1px;
+      background: var(--accent-gold);
+      opacity: 0.5;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(5rem, 18vw, 18rem);
+      line-height: 0.82;
+      letter-spacing: -0.045em;
+      margin-bottom: var(--s-4);
+      font-variation-settings: 'opsz' 144;
+      opacity: 0;
+      animation: fadeUp 1.4s 0.5s var(--ease-out) forwards;
+    }
+    .hero-title .tilde-xl {
+      display: inline-block;
+      color: var(--accent-gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .hero-tagline {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin: 0 auto var(--s-6);
+      line-height: 1.4;
+      opacity: 0;
+      animation: fadeUp 1.4s 0.7s var(--ease-out) forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--s-3);
+      justify-content: center;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 1.4s 0.9s var(--ease-out) forwards;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .scroll-cue {
+      position: absolute;
+      bottom: 2rem; left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.65rem;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      writing-mode: vertical-rl;
+      opacity: 0;
+      animation: fadeUp 1.4s 1.2s var(--ease-out) forwards;
+    }
+
+    /* =======================================================================
+       SECTION SHELL · shared
+       ======================================================================= */
+
+    section.block-wrap {
+      padding: var(--s-16) 0;
+    }
+
+    .block {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    .block-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: var(--s-8);
+      gap: var(--s-4);
+      flex-wrap: wrap;
+    }
+
+    .block-title {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(2.2rem, 4.5vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      font-variation-settings: 'opsz' 144;
+    }
+    .block-title em {
+      color: var(--accent-gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .block-eyebrow { margin-bottom: var(--s-3); }
+
+    /* =======================================================================
+       4 · LATEST DROP
+       This is the central commerce panel.
+       Each .product-card has a Buy Button injection slot.
+       Duplicate the card template to add more products.
+       ======================================================================= */
+
+    #drops { background: var(--bg-secondary); }
+
+    .drop-meta {
+      display: flex;
+      gap: var(--s-4);
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: var(--s-3);
+    }
+    .drop-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      box-shadow: 0 0 12px var(--accent-gold);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-3);
+    }
+
+    /* ============================================================
+       PRODUCT CARD TEMPLATE
+
+       To add a new product:
+       1. Copy the entire <article class="product-card">...</article>
+       2. Change the data-product-id to a unique value
+       3. Update the image, title, price, description
+       4. When wiring Shopify, paste your Buy Button code inside the
+          <div class="buy-button-slot" id="buy-button-NAME"></div>
+       ============================================================ */
+
+    .product-card {
+      background: var(--bg-primary);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.6s var(--ease-out);
+    }
+    .product-card:hover { transform: translateY(-6px); }
+
+    .product-image {
+      aspect-ratio: 4/5;
+      background:
+        linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.5) 100%),
+        var(--bg-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .product-image::after {
+      content: attr(data-placeholder);
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 0.85rem;
+      opacity: 0.5;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .product-tag {
+      position: absolute;
+      top: var(--s-3); left: var(--s-3);
+      background: rgba(10, 10, 10, 0.85);
+      backdrop-filter: blur(8px);
+      color: var(--accent-gold);
+      padding: 0.4rem 0.8rem;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      font-weight: 500;
+      border: 1px solid var(--accent-gold);
+      z-index: 2;
+    }
+
+    .product-info {
+      padding: var(--s-4) var(--s-3);
+    }
+
+    .product-name {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.5rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+      font-variation-settings: 'opsz' 144;
+    }
+
+    .product-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.05em;
+      margin-bottom: var(--s-2);
+    }
+
+    .product-price {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.2rem;
+      color: var(--accent-gold);
+      margin-bottom: var(--s-3);
+    }
+
+    /* Shopify Buy Button renders here. Fallback shows until wired. */
+    .buy-button-slot {
+      min-height: 3rem;
+    }
+
+    .btn-fallback {
+      width: 100%;
+      padding: 1rem;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.4s var(--ease-out);
+    }
+    .btn-fallback:hover {
+      background: var(--accent-gold);
+      color: var(--bg-primary);
+      border-color: var(--accent-gold);
+    }
+
+    @media (max-width: 900px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =======================================================================
+       5 · CRAFTSMANSHIP
+       The "wearable art" positioning — embroidery as the differentiator.
+       Per Derschutze: lead with the technique, not the model.
+       ======================================================================= */
+
+    .craft {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-12);
+      align-items: center;
+    }
+
+    .craft-image {
+      aspect-ratio: 1/1;
+      background:
+        linear-gradient(135deg, rgba(201, 169, 97, 0.1), transparent),
+        var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+    .craft-image::after {
+      content: 'CRAFTSMANSHIP · Macro embroidery detail (1000×1000)';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-style: italic;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      opacity: 0.5;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .craft-content h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin-bottom: var(--s-4);
+      font-variation-settings: 'opsz' 144;
+    }
+    .craft-content h2 em {
+      color: var(--accent-gold);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .craft-content p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: var(--s-3);
+      max-width: 480px;
+    }
+
+    .craft-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-3);
+      margin-top: var(--s-6);
+      padding-top: var(--s-6);
+      border-top: 1px solid var(--border);
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: 2.5rem;
+      color: var(--accent-gold);
+      line-height: 1;
+      margin-bottom: 0.3rem;
+      font-variation-settings: 'opsz' 144;
+    }
+
+    .stat-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 900px) {
+      .craft { grid-template-columns: 1fr; gap: var(--s-6); }
+      .craft-stats { grid-template-columns: 1fr; gap: var(--s-2); padding-top: var(--s-4); margin-top: var(--s-4); }
+    }
+
+    /* =======================================================================
+       6 · HERITAGE
+       The Brazilian story. Subtler than first version — heritage as
+       an underlying note, not the main theme.
+       ======================================================================= */
+
+    #heritage { background: var(--bg-secondary); }
+
+    .heritage {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: var(--s-12);
+      align-items: center;
+    }
+
+    .heritage-image {
+      aspect-ratio: 4/5;
+      background:
+        linear-gradient(135deg, rgba(45, 79, 61, 0.3), rgba(168, 90, 61, 0.15)),
+        var(--bg-tertiary);
+      position: relative;
+      overflow: hidden;
+    }
+    .heritage-image::after {
+      content: 'HERITAGE · Family photo, Brazil landscape, or hand-drawn artwork (800×1000)';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-style: italic;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      opacity: 0.5;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .heritage-content h2 {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-size: clamp(2.2rem, 4vw, 3.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin-bottom: var(--s-4);
+      font-variation-settings: 'opsz' 144;
+    }
+    .heritage-content h2 em {
+      color: var(--accent-emerald);
+      font-style: italic;
+      font-weight: 400;
+    }
+
+    .heritage-content p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.8;
+      margin-bottom: var(--s-3);
+      max-width: 480px;
+    }
+
+    .heritage-signature {
+      font-family: var(--font-display);
+      font-style: italic;
+      color: var(--accent-gold);
+      font-size: 1.1rem;
+      margin-top: var(--s-4);
+    }
+
+    @media (max-width: 900px) {
+      .heritage { grid-template-columns: 1fr; gap: var(--s-6); }
+    }
+
+    /* =======================================================================
+       7 · ARCHIVE / PAST DROPS
+       Build out as each drop ships. Each card links to that drop's page.
+       ======================================================================= */
+
+    .archive-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-3);
+    }
+
+    .archive-card {
+      aspect-ratio: 3/4;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      background:
+        linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.85) 100%),
+        var(--bg-tertiary);
+      transition: transform 0.6s var(--ease-out);
+      display: block;
+    }
+    .archive-card:hover { transform: scale(1.02); }
+
+    .archive-card::before {
+      content: attr(data-placeholder);
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+      font-style: italic;
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      opacity: 0.4;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    .archive-card-meta {
+      position: absolute;
+      bottom: var(--s-3); left: var(--s-3);
+      right: var(--s-3);
+      z-index: 2;
+    }
+
+    .archive-card-name {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: 1.4rem;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.3rem;
+      font-variation-settings: 'opsz' 144;
+    }
+
+    .archive-card-status {
+      font-size: 0.65rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+    }
+
+    @media (max-width: 900px) {
+      .archive-row { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .archive-row { grid-template-columns: 1fr; }
+    }
+
+    /* =======================================================================
+       8 · MANIFESTO + NEWSLETTER
+       ======================================================================= */
+
+    .manifesto {
+      text-align: center;
+      padding: var(--s-24) var(--gutter);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .manifesto-text {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      line-height: 1.4;
+      margin-bottom: var(--s-8);
+      font-variation-settings: 'opsz' 144;
+    }
+    .manifesto-text em {
+      color: var(--accent-gold);
+      font-style: normal;
+    }
+
+    .newsletter {
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .newsletter-form {
+      display: flex;
+      border-bottom: 1px solid var(--border-strong);
+      transition: border-color 0.3s ease;
+    }
+    .newsletter-form:focus-within {
+      border-color: var(--accent-gold);
+    }
+
+    .newsletter-form input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      padding: 1rem 0;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+    }
+    .newsletter-form input::placeholder { color: var(--text-muted); }
+    .newsletter-form input:focus { outline: none; }
+
+    .newsletter-form button {
+      color: var(--accent-gold);
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      font-weight: 500;
+      padding: 1rem 0 1rem 1.5rem;
+    }
+    .newsletter-form button::after { content: ' →'; }
+
+    .newsletter-success {
+      color: var(--accent-gold);
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.1rem;
+      margin-top: var(--s-3);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out);
+    }
+    .newsletter-success.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =======================================================================
+       9 · FOOTER
+       ======================================================================= */
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: var(--s-8) var(--gutter) var(--s-4);
+      background: var(--bg-secondary);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: var(--s-8);
+      max-width: var(--container);
+      margin: 0 auto var(--s-8);
+    }
+
+    .footer-brand .logo { font-size: 2rem; display: inline-block; margin-bottom: var(--s-2); }
+    .footer-brand p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: var(--s-3);
+      margin-top: var(--s-4);
+    }
+    .footer-social a {
+      width: 2.2rem; height: 2.2rem;
+      border: 1px solid var(--border-strong);
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 0.3s, color 0.3s;
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .footer-social a:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .footer-col h4 {
+      font-size: 0.7rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--accent-gold);
+      margin-bottom: var(--s-3);
+      font-weight: 500;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 0.7rem; }
+    .footer-col a {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      transition: color 0.3s;
+    }
+    .footer-col a:hover { color: var(--text-primary); }
+
+    .footer-bottom {
+      max-width: var(--container);
+      margin: 0 auto;
+      padding-top: var(--s-4);
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      gap: var(--s-3);
+      flex-wrap: wrap;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+    }
+    @media (max-width: 600px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =======================================================================
+       10 · CART DRAWER · slides in from right
+       Functional placeholder. When Shopify Buy Button is wired,
+       Shopify's cart overlay replaces this (or works alongside).
+       ======================================================================= */
+
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s var(--ease-out);
+      z-index: 90;
+    }
+    .drawer-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .cart-drawer {
+      position: fixed;
+      top: 0; right: 0;
+      width: 100%;
+      max-width: 460px;
+      height: 100vh;
+      background: var(--bg-elevated);
+      border-left: 1px solid var(--border);
+      box-shadow: var(--shadow-lift);
+      transform: translateX(100%);
+      transition: transform 0.5s var(--ease-out);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .cart-drawer.open { transform: translateX(0); }
+
+    .drawer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-4);
+      border-bottom: 1px solid var(--border);
+    }
+    .drawer-title {
+      font-family: var(--font-display);
+      font-size: 1.4rem;
+      font-weight: 400;
+      font-variation-settings: 'opsz' 144;
+    }
+    .drawer-close {
+      width: 2.5rem; height: 2.5rem;
+      display: inline-flex; align-items: center; justify-content: center;
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      transition: color 0.3s;
+    }
+    .drawer-close:hover { color: var(--accent-gold); }
+
+    .drawer-body {
+      flex: 1;
+      padding: var(--s-4);
+      overflow-y: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .empty-cart-msg {
+      color: var(--text-secondary);
+    }
+    .empty-cart-msg-title {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-size: 1.2rem;
+      color: var(--text-primary);
+      margin-bottom: var(--s-2);
+    }
+    .empty-cart-msg-sub {
+      font-size: 0.85rem;
+      max-width: 280px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* =======================================================================
+       11 · MOBILE MENU · slides in from right
+       ======================================================================= */
+
+    .mobile-menu {
+      position: fixed;
+      top: 0; right: 0;
+      width: 100%;
+      max-width: 380px;
+      height: 100vh;
+      background: var(--bg-elevated);
+      border-left: 1px solid var(--border);
+      transform: translateX(100%);
+      transition: transform 0.5s var(--ease-out);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-menu.open { transform: translateX(0); }
+
+    .mobile-menu .drawer-header { padding: var(--s-3) var(--s-4); }
+
+    .mobile-menu-nav {
+      flex: 1;
+      padding: var(--s-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+    }
+    .mobile-menu-nav a {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      padding: var(--s-1) 0;
+      letter-spacing: -0.01em;
+      transition: color 0.3s, padding-left 0.4s var(--ease-out);
+      font-variation-settings: 'opsz' 144;
+    }
+    .mobile-menu-nav a:hover {
+      color: var(--accent-gold);
+      padding-left: var(--s-2);
+    }
+
+    /* =======================================================================
+       ANIMATIONS · scroll-triggered reveal
+       Sections fade in as user scrolls
+       ======================================================================= */
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 1.2s var(--ease-out), transform 1.2s var(--ease-out);
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* =======================================================================
+       UTILITIES
+       ======================================================================= */
+    .sr-only {
+      position: absolute;
+      width: 1px; height: 1px;
+      padding: 0; margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =======================================================================
+       ANNOUNCEMENT BAR
+       Edit copy per drop. Use for: drop launches, free shipping, news.
+       ======================================================================= -->
+  <div class="announcement-bar">
+    <strong>Drop 001 · 桜 Sakura</strong> · Pre-order now · Ships in 6 weeks · Free shipping over $200
+  </div>
+
+  <!-- =======================================================================
+       NAVIGATION
+       ======================================================================= -->
+  <nav class="main-nav">
+    <div class="nav-left">
+      <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links">
+        <li><a href="#drops">Shop</a></li>
+        <li><a href="#craft">Craft</a></li>
+        <li><a href="#heritage">Herança</a></li>
+        <li><a href="#archive">Archive</a></li>
+      </ul>
+    </div>
+    <div class="nav-center">
+      <a href="/" class="logo">VIS<span class="tilde">Ã</span>O</a>
+    </div>
+    <div class="nav-right">
+      <button class="icon-btn" aria-label="Search" onclick="alert('TODO: implement search')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+      </button>
+      <button class="icon-btn" aria-label="Cart" onclick="openCart()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/>
+        </svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- =======================================================================
+       HERO
+       Replace .hero-bg with a real image when you have one.
+       ======================================================================= -->
+  <section class="hero">
+    <div class="hero-bg"></div>
+    <span class="hero-deco tl">v</span>
+    <span class="hero-deco br">ã</span>
+
+    <div class="hero-content">
+      <div class="label hero-label">Drop 001 · 桜 Sakura</div>
+      <h1 class="hero-title">VIS<span class="tilde-xl">Ã</span>O</h1>
+      <p class="hero-tagline">Embroidered. Limited. Worn by those who notice.</p>
+      <div class="hero-actions">
+        <a href="#drops" class="btn btn-gold">Shop Drop 001</a>
+        <a href="#craft" class="btn btn-ghost">The Craft</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue">Scroll · Descer</div>
+  </section>
+
+  <!-- =======================================================================
+       LATEST DROP · main commerce panel
+
+       === HOW TO ADD A PRODUCT ===
+       1. Copy one of the <article class="product-card"> blocks below
+       2. Change data-product-id to a unique value
+       3. Update image (data-placeholder), name, subtitle, price
+       4. Change the inner div id="buy-button-NAME" to match
+       5. When wiring Shopify, paste your generated Buy Button code
+          inside that buy-button-slot div.
+       ======================================================================= -->
+  <section id="drops" class="block-wrap reveal">
+    <div class="block">
+      <div class="block-header">
+        <div>
+          <div class="drop-meta">
+            <span class="drop-status"><span class="status-dot"></span>Live Drop</span>
+            <span class="label">001 · 桜 Sakura</span>
+          </div>
+          <h2 class="block-title">The <em>Sakura</em> Collection</h2>
+        </div>
+        <a href="#" class="btn-link">View All Pieces</a>
+      </div>
+
+      <div class="product-grid">
+
+        <!-- === PRODUCT CARD 1 === -->
+        <article class="product-card" data-product-id="sakura-hoodie">
+          <div class="product-image" data-placeholder="Sakura Hoodie · back-embroidery shot">
+            <span class="product-tag">1 of 100</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">The Sakura</h3>
+            <p class="product-subtitle">Heavyweight hoodie · Back embroidery · 80k stitches</p>
+            <div class="product-price">$165</div>
+            <!-- SHOPIFY BUY BUTTON #1: paste generated code's <div> inside, or
+                 update Shopify's "node:" reference to target this div's id -->
+            <div class="buy-button-slot" id="buy-button-sakura-hoodie">
+              <button class="btn-fallback">Reserve · Pre-order</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- === PRODUCT CARD 2 === -->
+        <article class="product-card" data-product-id="sakura-tee">
+          <div class="product-image" data-placeholder="Sakura Tee · front detail">
+            <span class="product-tag">1 of 150</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">The Sakura Tee</h3>
+            <p class="product-subtitle">Boxy heavyweight · Chest embroidery</p>
+            <div class="product-price">$85</div>
+            <!-- SHOPIFY BUY BUTTON #2 -->
+            <div class="buy-button-slot" id="buy-button-sakura-tee">
+              <button class="btn-fallback">Reserve · Pre-order</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- === PRODUCT CARD 3 === -->
+        <article class="product-card" data-product-id="sakura-denim">
+          <div class="product-image" data-placeholder="Sakura Denim · embroidered leg">
+            <span class="product-tag">1 of 50</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">The Sakura Denim</h3>
+            <p class="product-subtitle">Raw selvedge · Embroidered leg panel</p>
+            <div class="product-price">$185</div>
+            <!-- SHOPIFY BUY BUTTON #3 -->
+            <div class="buy-button-slot" id="buy-button-sakura-denim">
+              <button class="btn-fallback">Reserve · Pre-order</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       CRAFTSMANSHIP · "wearable art" positioning
+       ======================================================================= -->
+  <section id="craft" class="block-wrap reveal">
+    <div class="block">
+      <div class="craft">
+        <div class="craft-image"></div>
+        <div class="craft-content">
+          <div class="label line-before block-eyebrow">A Arte · The Craft</div>
+          <h2>Threads, not <em>prints</em>.</h2>
+          <p>Every VISÃO piece is embroidered, not printed. Stitched line by line in heavyweight thread on heavyweight cotton — the kind of work that takes hours per garment and lasts decades.</p>
+          <p>We work with one factory. We choose every thread color. We sign off on every sample. Each drop is limited because real embroidery can't be rushed.</p>
+          <div class="craft-stats">
+            <div>
+              <div class="stat-num">80k+</div>
+              <div class="stat-label">Stitches per piece</div>
+            </div>
+            <div>
+              <div class="stat-num">400gsm</div>
+              <div class="stat-label">Heavyweight cotton</div>
+            </div>
+            <div>
+              <div class="stat-num">100</div>
+              <div class="stat-label">Units per drop</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       HERITAGE · the Brazilian story (subtler than v1)
+       ======================================================================= -->
+  <section id="heritage" class="block-wrap reveal">
+    <div class="block">
+      <div class="heritage">
+        <div class="heritage-image"></div>
+        <div class="heritage-content">
+          <div class="label line-before block-eyebrow">Herança · The Story</div>
+          <h2>It started with <em>Lourdes.</em></h2>
+          <p>VISÃO started with my grandmother, Lourdes. She came to the U.S. from Brazil, and she's the one who taught me what working with your hands really means.</p>
+          <p>The brand is named in her language. Every piece is embroidered, never printed — because that's how she'd want it made.</p>
+          <p class="heritage-signature">— Gabriel, founder</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       ARCHIVE / PAST DROPS
+       Build out as each drop ships. Each card links to that drop's page.
+       ======================================================================= -->
+  <section id="archive" class="block-wrap reveal">
+    <div class="block">
+      <div class="block-header">
+        <div>
+          <div class="label line-before block-eyebrow">Archive</div>
+          <h2 class="block-title">Past <em>Drops</em></h2>
+        </div>
+        <a href="#" class="btn-link">View Full Archive</a>
+      </div>
+
+      <div class="archive-row">
+        <!-- === ARCHIVE CARD: duplicate per drop === -->
+        <a href="#" class="archive-card" data-placeholder="Drop 001 · Sakura preview">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">001 · 桜 Sakura</h3>
+            <span class="archive-card-status">Live Now</span>
+          </div>
+        </a>
+        <a href="#" class="archive-card" data-placeholder="Drop 002 · In production">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">002 · Coming Soon</h3>
+            <span class="archive-card-status">In Production</span>
+          </div>
+        </a>
+        <a href="#" class="archive-card" data-placeholder="Drop 003 · Brazil capsule preview">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">003 · Brasil</h3>
+            <span class="archive-card-status">In Development</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       MANIFESTO + NEWSLETTER
+       ======================================================================= -->
+  <section class="manifesto reveal">
+    <p class="manifesto-text">"We don't make clothes for everyone. <em>We make them for the people who'd rather build something than wear someone else's logo.</em>"</p>
+    <div class="newsletter">
+      <form class="newsletter-form" onsubmit="handleNewsletter(event)">
+        <input type="email" placeholder="Enter your email for drop access" required aria-label="Email">
+        <button type="submit">Subscribe</button>
+      </form>
+      <p class="newsletter-success" id="newsletterSuccess">Welcome. You're on the list.</p>
+    </div>
+  </section>
+
+  <!-- =======================================================================
+       FOOTER
+       ======================================================================= -->
+  <footer>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo">VIS<span class="tilde">Ã</span>O</span>
+        <p>Embroidered, not printed. Limited drops with care, from a Brazilian heritage, Japanese-influenced label.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/visao" target="_blank" rel="noopener">IG</a>
+          <a href="https://tiktok.com/@visao" target="_blank" rel="noopener">TT</a>
+          <a href="https://youtube.com/@vi3ion" target="_blank" rel="noopener">YT</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="#drops">Drop 001 · Sakura</a></li>
+          <li><a href="#archive">Archive</a></li>
+          <li><a href="#">Size Guide</a></li>
+          <li><a href="#">Lookbook</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>About</h4>
+        <ul>
+          <li><a href="#heritage">Herança</a></li>
+          <li><a href="#craft">Craftsmanship</a></li>
+          <li><a href="#">Sustainability</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Shipping</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Track Order</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 VISÃO · Made with herança</span>
+      <span>Designed in Florida · Manufactured with care</span>
+    </div>
+  </footer>
+
+  <!-- =======================================================================
+       OVERLAYS · cart drawer + mobile menu
+       Both slide in from the right
+       ======================================================================= -->
+  <div class="drawer-overlay" id="drawerOverlay" onclick="closeAllDrawers()"></div>
+
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="drawer-header">
+      <h2 class="drawer-title">Your Cart</h2>
+      <button class="drawer-close" onclick="closeCart()" aria-label="Close cart">×</button>
+    </div>
+    <div class="drawer-body">
+      <!-- Shopify Buy Button will replace this when wired -->
+      <div class="empty-cart-msg">
+        <p class="empty-cart-msg-title">Nothing here yet.</p>
+        <p class="empty-cart-msg-sub">Reserve a piece from Drop 001 and it'll show up here.</p>
+      </div>
+    </div>
+  </aside>
+
+  <aside class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="drawer-header">
+      <span class="logo" style="font-size: 1.4rem;">VIS<span class="tilde">Ã</span>O</span>
+      <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">×</button>
+    </div>
+    <div class="mobile-menu-nav">
+      <a href="#drops" onclick="closeMobileMenu()">Shop</a>
+      <a href="#craft" onclick="closeMobileMenu()">Craft</a>
+      <a href="#heritage" onclick="closeMobileMenu()">Herança</a>
+      <a href="#archive" onclick="closeMobileMenu()">Archive</a>
+    </div>
+  </aside>
+
+  <!-- =======================================================================
+       JAVASCRIPT
+
+       SECTIONS:
+       1. Drawer / menu controls
+       2. Newsletter form
+       3. Scroll reveal
+       4. Cart count bump (demo wiring)
+       5. Shopify Buy Button init (commented — uncomment when ready)
+       ======================================================================= -->
+  <script>
+    // ===== 1. DRAWERS =====
+    const overlay = document.getElementById('drawerOverlay');
+    const cart = document.getElementById('cartDrawer');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    function openCart() {
+      cart.classList.add('open');
+      overlay.classList.add('open');
+      cart.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeCart() {
+      cart.classList.remove('open');
+      overlay.classList.remove('open');
+      cart.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function toggleMobileMenu() {
+      mobileMenu.classList.add('open');
+      overlay.classList.add('open');
+      mobileMenu.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+      overlay.classList.remove('open');
+      mobileMenu.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+    function closeAllDrawers() {
+      closeCart();
+      closeMobileMenu();
+    }
+    // Close on Escape key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeAllDrawers();
+    });
+
+    // ===== 2. NEWSLETTER =====
+    function handleNewsletter(e) {
+      e.preventDefault();
+      const email = e.target.querySelector('input').value;
+      const success = document.getElementById('newsletterSuccess');
+
+      // TODO: Replace with real submission to Klaviyo / Shopify Email / Mailchimp
+      // Example for Klaviyo: fetch('https://manage.kmail-lists.com/...', { method: 'POST', body: ... })
+      console.log('Newsletter signup:', email);
+
+      success.classList.add('visible');
+      e.target.reset();
+      setTimeout(() => success.classList.remove('visible'), 4000);
+    }
+
+    // ===== 3. SCROLL REVEAL =====
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ===== 4. CART COUNT BUMP =====
+    // Call this whenever something is added to cart.
+    // Shopify will fire its own events once wired — this is for demo/fallback.
+    function bumpCart() {
+      const count = document.getElementById('cartCount');
+      count.classList.add('bump');
+      setTimeout(() => count.classList.remove('bump'), 400);
+    }
+    // Wire up fallback buttons to demo the bump (remove this block when Shopify is connected)
+    document.querySelectorAll('.btn-fallback').forEach(btn => {
+      btn.addEventListener('click', () => {
+        bumpCart();
+        openCart();
+      });
+    });
+
+    // ===== 5. SHOPIFY BUY BUTTON INIT =====
+    //
+    // When you create Buy Buttons in Shopify Admin, Shopify generates code
+    // that targets specific DIV IDs. The product cards above each have a
+    // .buy-button-slot div with a unique id (buy-button-sakura-hoodie, etc.)
+    //
+    // For each product:
+    // 1. Shopify Admin → Buy Button → Create a Buy Button → Product
+    // 2. Customize: gold (#c9a961) button, dark text, hide image/title/price
+    // 3. Click "Next" → Shopify gives you generated code
+    // 4. In the generated code, find: node: document.getElementById('product-component-XXX')
+    //    Change 'product-component-XXX' to match your slot ID, e.g. 'buy-button-sakura-hoodie'
+    // 5. Paste the full generated code below (each product = one block)
+    //
+    /*
+    // EXAMPLE — replace with your real Shopify generated code per product:
+    (function () {
+      var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+      if (window.ShopifyBuy) {
+        if (window.ShopifyBuy.UI) { ShopifyBuyInit(); }
+        else { loadScript(); }
+      } else { loadScript(); }
+      function loadScript() {
+        var script = document.createElement('script');
+        script.async = true;
+        script.src = scriptURL;
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+        script.onload = ShopifyBuyInit;
+      }
+      function ShopifyBuyInit() {
+        var client = ShopifyBuy.buildClient({
+          domain: 'visao.myshopify.com',
+          storefrontAccessToken: 'YOUR_TOKEN_HERE',
+        });
+        ShopifyBuy.UI.onReady(client).then(function (ui) {
+          ui.createComponent('product', {
+            id: 'YOUR_PRODUCT_ID_FROM_SHOPIFY',
+            node: document.getElementById('buy-button-sakura-hoodie'),
+            options: {
+              product: {
+                contents: { img: false, title: false, price: false },
+                text: { button: 'Reserve · Pre-order' },
+                styles: {
+                  button: {
+                    'font-family': 'Manrope, sans-serif',
+                    'font-size': '11px',
+                    'letter-spacing': '0.28em',
+                    'text-transform': 'uppercase',
+                    'font-weight': '500',
+                    'padding': '18px 32px',
+                    'background-color': '#c9a961',
+                    'color': '#0a0a0a',
+                    'border-radius': '0',
+                    ':hover': { 'background-color': '#a88f4f', 'letter-spacing': '0.36em' }
+                  }
+                }
+              },
+              cart: {
+                styles: {
+                  button: { 'background-color': '#c9a961', 'color': '#0a0a0a', 'font-family': 'Manrope, sans-serif' }
+                }
+              }
+            }
+          });
+        });
+      }
+    })();
+    */
+  </script>
+
+</body>
+</html>
