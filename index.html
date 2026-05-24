@@ -630,7 +630,7 @@
       .hero            { align-items: flex-start; padding: 1.5rem var(--gutter); }
       .hero-stack      { gap: var(--s-3); }
       .hero-box        { max-width: 280px; padding: 1.1rem; gap: var(--s-2); }
-      .hero-box .logo  { max-width: 220px; }
+      .hero-box .logo  { max-width: 160px; max-height: 80px; }
       .hero-box-tag    { font-size: 0.58rem; margin-top: -0.4rem; }
       .mascot-wrap     { max-width: 210px; margin: 0 auto 24px; }
       .mascot          { font-size: 0.56rem; padding: 0.7rem; }
@@ -646,38 +646,47 @@
     /* Even narrower phones (≤375px — iPhone SE / Mini) — tighten further */
     @media (max-width: 375px) {
       .hero-box         { max-width: 260px; padding: 0.9rem; }
-      .hero-box .logo   { max-width: 200px; }
+      .hero-box .logo   { max-width: 140px; max-height: 70px; }
       .mascot-wrap      { max-width: 190px; margin: 0 auto 20px; }
       .side-vines       { width: 36px; }
       .side-vines.left  { left: -36px; }
       .side-vines.right { right: -36px; }
     }
 
-    /* SHORT VIEWPORTS — phones where the height is the bottleneck
-       (iPhone 12 ≈ 750–800 usable px once chrome is showing). Without
-       these rules, the bottom of the nav list (retail stores, stickers)
-       falls below the fold. We shrink the mascot + tighten gaps so the
-       whole stack fits in one screen. */
-    @media (max-height: 800px) and (max-width: 480px) {
+    /* SHORT VIEWPORTS — applies to ANY device whose visible height is
+       limited: phones (iPhone 12 ≈ 750–800 usable px) AND laptops with
+       smaller browser windows (13" MacBook ≈ 700–800 usable). Without
+       these, the bottom of the nav list falls below the fold. We shrink
+       the logo / mascot / gaps so the whole stack fits in one screen. */
+    @media (max-height: 800px) {
       .hero            { padding: 0.75rem var(--gutter); }
       .hero-stack      { gap: var(--s-2); }
-      .hero-box        { padding: 0.85rem; gap: 0.65rem; }
-      .hero-box .logo  { max-width: 200px; }
-      .mascot-wrap     { max-width: 175px; margin: 0 auto 14px; }
-      .hero-email-form input  { padding: 0.5rem 0.55rem; font-size: 0.66rem; }
-      .hero-email-form button { padding: 0.5rem 0.7rem; }
+      .hero-box        { padding: 0.95rem; gap: 0.65rem; }
+      .hero-box .logo  { max-width: 150px; max-height: 70px; margin: -0.5rem auto -0.8rem; }
+      .mascot-wrap     { max-width: 200px; margin: 0 auto 14px; }
+      .hero-email-form input  { padding: 0.55rem 0.6rem; font-size: 0.68rem; }
+      .hero-email-form button { padding: 0.55rem 0.75rem; }
       .hero-social     { padding-top: 0.7rem; }
-      .hero-social a   { font-size: 0.62rem; }
-      .left-nav        { gap: 0.4rem; }
+      .hero-social a   { font-size: 0.64rem; }
+      .left-nav        { gap: 0.42rem; }
+      .left-nav a      { font-size: 0.92rem; }
+    }
+    /* Mobile-narrow + short — even tighter on the smallest phones */
+    @media (max-height: 800px) and (max-width: 480px) {
+      .hero-box        { padding: 0.85rem; }
+      .mascot-wrap     { max-width: 175px; }
       .left-nav a      { font-size: 0.95rem; }
     }
-    /* VERY short viewports — iPhone SE landscape, small Androids */
-    @media (max-height: 680px) and (max-width: 480px) {
-      .mascot-wrap     { max-width: 150px; margin: 0 auto 10px; }
-      .hero-box .logo  { max-width: 180px; }
+    /* VERY short viewports — iPhone SE, MacBook Air with tabs+toolbar, etc. */
+    @media (max-height: 680px) {
+      .mascot-wrap     { max-width: 160px; margin: 0 auto 10px; }
+      .hero-box .logo  { max-width: 130px; max-height: 60px; }
       .hero-box-tag    { font-size: 0.55rem; }
-      .left-nav        { gap: 0.32rem; }
-      .left-nav a      { font-size: 0.88rem; }
+      .left-nav        { gap: 0.34rem; }
+      .left-nav a      { font-size: 0.85rem; }
+    }
+    @media (max-height: 680px) and (max-width: 480px) {
+      .mascot-wrap     { max-width: 150px; }
     }
 
     @keyframes fadeIn {
@@ -685,18 +694,20 @@
       to { opacity: 1; }
     }
 
-    /* Custom collage-style VISÃO logo image. Replaces the text logo on
-       the homepage. Subtle ambient drop-shadow always present; on hover
-       the shadow intensifies to a soft pink (sakura accent) and the
-       logo scales up 4%. */
+    /* Custom collage-style VISÃO logo image. The source PNG has a lot
+       of transparent vertical padding around the actual letters, so we
+       cap both max-width AND max-height and use negative margins to
+       pull surrounding elements closer — avoids the box feeling too tall. */
     .hero-box .logo {
       position: relative;
       z-index: 5;
       display: block;
       width: 100%;
-      max-width: 260px;
+      max-width: 180px;
+      max-height: 90px;
       height: auto;
-      margin: 0 auto;
+      object-fit: contain;
+      margin: -0.6rem auto -1rem;     /* tucks tag closer below the logo */
       transition: transform 0.4s var(--ease-out), filter 0.4s var(--ease-out);
       filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
       cursor: default;

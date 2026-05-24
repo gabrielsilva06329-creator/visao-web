@@ -49,11 +49,13 @@
     .home-link::before { content: '< '; color: var(--accent-gold); }
     .home-link:hover { color: var(--accent-gold); }
     .logo {
-      font-family: var(--font-mono); font-weight: 700; font-size: 1.4rem;
-      letter-spacing: 0.04em; line-height: 1;
       position: absolute; left: 50%; transform: translateX(-50%);
+      display: block; height: 38px; width: auto; max-width: 120px;
+      object-fit: contain;
+      transition: transform 0.2s ease, filter 0.2s ease;
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
     }
-    .logo .tilde { color: var(--accent-gold); font-size: 1.15em; }
+    .logo:hover { transform: translateX(-50%) scale(1.06); }
 
     /* === HAMBURGER + FULL-SCREEN NAV OVERLAY === */
     .nav-toggle {
@@ -197,7 +199,14 @@
       display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 3rem;
     }
-    .footer-brand .logo { font-size: 1.6rem; }
+    .footer-brand .logo {
+      display: block; height: auto;
+      width: 100%; max-width: 170px; max-height: 80px;
+      object-fit: contain; margin: 0 0 0.5rem;
+      position: static; transform: none;       /* override .logo absolute centering */
+      filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
+    }
+    .footer-brand .logo:hover { transform: none; }
     .footer-brand p {
       color: var(--text-secondary); font-size: 0.8rem;
       line-height: 1.7; margin: 0.8rem 0 1rem; max-width: 320px;
@@ -252,7 +261,7 @@
 <body>
   <header class="page-header">
     <a href="/" class="home-link">back home</a>
-    <div class="logo">VIS<span class="tilde">Ã</span>O</div>
+    <img src="/images/visao-logo.png" alt="VISÃO" class="logo">
     <button class="nav-toggle" onclick="openNav()" aria-label="Open menu">
       <span></span><span></span><span></span>
     </button>
@@ -350,7 +359,7 @@
     </div>
     <div class="footer-grid">
       <div class="footer-brand">
-        <span class="logo">VIS<span class="tilde">Ã</span>O</span>
+        <img src="/images/visao-logo.png" alt="VISÃO" class="logo">
         <p>embroidered, not printed. limited drops. brazilian heritage, japanese influence.</p>
         <div class="footer-social">
           <a href="https://instagram.com/visao" target="_blank" rel="noopener">IG</a>
