@@ -4,152 +4,310 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>shop — VISÃO</title>
-  <meta name="description" content="shop the latest drop — VISÃO. embroidered, not printed. limited drops.">
+  <meta name="description" content="shop the sakura drop — VISÃO. embroidered, not printed. limited drops.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- SHOPIFY BUY BUTTON SDK — loaded so each product card's
+       buy-button-slot can mount a Buy Button when wired. -->
+  <!-- <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script> -->
+
   <style>
     :root {
-      --bg-primary:     #000000;
-      --text-primary:   #ffffff;
-      --text-secondary: #aaaaaa;
-      --text-muted:     #666666;
-      --accent-gold:    #c9a961;
-      --border-strong:  rgba(255, 255, 255, 0.45);
-      --font-mono:      'JetBrains Mono', monospace;
+      --bg-primary: #000; --bg-secondary: #0a0a0a;
+      --text-primary: #fff; --text-secondary: #aaa; --text-muted: #666;
+      --accent-gold: #c9a961;
+      --border: rgba(255,255,255,0.18);
+      --border-strong: rgba(255,255,255,0.45);
+      --font-mono: 'JetBrains Mono', monospace;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body {
-      overflow-x: hidden;
-      overscroll-behavior-x: none;
-      width: 100%;
-      touch-action: pan-y;
-    }
-    html { background: var(--bg-primary); }
+    html, body { overflow-x: hidden; overscroll-behavior-x: none; width: 100%; touch-action: pan-y; }
+    html { background: var(--bg-primary); scroll-behavior: smooth; }
     body {
-      background: var(--bg-primary);
-      color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-weight: 400;
-      line-height: 1.6;
-      min-height: 100vh;
-      min-height: 100svh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 5rem 1.5rem 3rem;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
+      background: var(--bg-primary); color: var(--text-primary);
+      font-family: var(--font-mono); font-weight: 400; line-height: 1.6;
+      min-height: 100vh; min-height: 100svh;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
-    /* CRT scanline overlay — matches the home page */
     body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background-image: repeating-linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0.03) 0px,
-        rgba(255, 255, 255, 0.03) 1px,
-        transparent 1px,
-        transparent 3px
-      );
-      pointer-events: none;
-      z-index: 1000;
+      content: ''; position: fixed; inset: 0;
+      background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 1000;
+    }
+
+    /* === HEADER (back link + logo) === */
+    .page-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 2rem;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
     }
     .home-link {
-      position: fixed;
-      top: 1.5rem;
-      left: 1.5rem;
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      color: var(--text-secondary);
-      text-transform: lowercase;
-      text-decoration: none;
-      transition: color 0.18s ease;
-      z-index: 10;
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      color: var(--text-secondary); text-transform: lowercase;
+      text-decoration: none; transition: color 0.18s ease;
     }
     .home-link::before { content: '< '; color: var(--accent-gold); }
     .home-link:hover { color: var(--accent-gold); }
-
     .logo {
-      font-family: var(--font-mono);
-      font-weight: 700;
-      font-size: clamp(2rem, 7vw, 3rem);
-      letter-spacing: 0.04em;
-      color: var(--text-primary);
-      margin-bottom: 0.5rem;
-      line-height: 1;
+      font-family: var(--font-mono); font-weight: 700; font-size: 1.4rem;
+      letter-spacing: 0.04em; color: var(--text-primary); line-height: 1;
     }
-    .logo .tilde {
-      color: var(--accent-gold);
-      font-size: 1.15em;
+    .logo .tilde { color: var(--accent-gold); font-size: 1.15em; }
+
+    /* === BLOCK SHELL === */
+    main { padding: 4rem 0 6rem; }
+    .block { max-width: 1440px; margin: 0 auto; padding: 0 3rem; }
+    .block-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3rem; gap: 2rem; flex-wrap: wrap;
+    }
+    .block-title {
+      font-weight: 700; font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase;
+    }
+    .block-title em { color: var(--accent-gold); font-style: normal; }
+
+    .ascii-rule {
+      color: var(--text-muted); overflow: hidden; white-space: nowrap;
+      height: 1.4em; line-height: 1.4; font-size: 0.8rem;
+      user-select: none; opacity: 0.6; margin-bottom: 3rem;
+    }
+    .ascii-rule::after {
+      content: "========================================================================================================================================================================================================";
     }
 
-    .page-eyebrow {
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      text-transform: lowercase;
-      margin-bottom: 0.4rem;
-    }
-    .page-eyebrow::before { content: '// '; color: var(--accent-gold); }
-
-    .page-title {
-      font-size: clamp(1.4rem, 5vw, 2.2rem);
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      text-transform: lowercase;
-      margin-bottom: 2rem;
+    .label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: lowercase; color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 0.5rem;
     }
 
-    .placeholder-box {
-      border: 1px solid var(--border-strong);
-      padding: 2rem 2.5rem;
-      max-width: 420px;
-      width: 100%;
-      text-align: center;
-      background: rgba(10, 10, 10, 0.6);
+    /* === DROP META (live drop indicator) === */
+    .drop-meta {
+      display: flex; gap: 1.5rem; align-items: center;
+      flex-wrap: wrap; margin-bottom: 1rem;
     }
-    .placeholder-text {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      line-height: 1.75;
-      margin-bottom: 1.25rem;
-    }
-    .status-line {
-      font-size: 0.7rem;
-      letter-spacing: 0.08em;
-      color: var(--accent-gold);
-      text-transform: lowercase;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
+    .drop-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.68rem; letter-spacing: 0.08em;
+      text-transform: lowercase; color: var(--text-secondary);
     }
     .status-dot {
-      width: 7px; height: 7px;
-      background: var(--accent-gold);
+      width: 7px; height: 7px; background: var(--accent-gold);
       animation: blink 1s step-end infinite;
     }
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      50.01%, 100% { opacity: 0; }
-    }
+    @keyframes blink { 0%,50% { opacity: 1; } 50.01%,100% { opacity: 0; } }
 
-    @media (max-width: 480px) {
-      body { padding: 4rem 1rem 2rem; }
-      .placeholder-box { padding: 1.5rem 1.25rem; }
-      .home-link { top: 1rem; left: 1rem; }
+    /* === SHOP LAYOUT (cart sidebar + main) === */
+    .shop-layout {
+      display: grid; grid-template-columns: 200px 1fr;
+      gap: 2rem; align-items: start;
+    }
+    .cart-block {
+      border: 1px solid var(--border-strong); background: var(--bg-primary);
+      position: sticky; top: 5rem; font-size: 0.72rem;
+    }
+    .cart-block-row {
+      display: flex; justify-content: space-between;
+      padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border);
+    }
+    .cart-block-head { color: var(--accent-gold); font-weight: 700; letter-spacing: 0.06em; }
+    .cart-block-count {
+      padding: 0.5rem 0.7rem; border-bottom: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .cart-block-actions { display: flex; }
+    .cart-block-actions button,
+    .cart-block-actions a {
+      flex: 1; text-align: center; padding: 0.5rem; font-size: 0.68rem;
+      color: var(--text-primary); background: none; border: none;
+      cursor: pointer; font-family: inherit; text-decoration: none;
+      transition: background 0.15s, color 0.15s;
+    }
+    .cart-block-actions button { border-right: 1px solid var(--border); }
+    .cart-block-actions button:hover,
+    .cart-block-actions a:hover { background: var(--text-primary); color: var(--bg-primary); }
+    #cartCount { display: inline-block; color: var(--accent-gold); font-weight: 700; }
+
+    .shop-filter {
+      display: flex; flex-wrap: wrap; gap: 0.3rem 0.6rem;
+      font-size: 0.72rem; letter-spacing: 0.06em; margin-bottom: 1rem;
+    }
+    .shop-filter .item { color: var(--text-secondary); cursor: pointer; }
+    .shop-filter .item.active { color: var(--accent-gold); }
+    .shop-filter .sep { color: var(--text-muted); }
+
+    .shop-collections {
+      font-size: 0.7rem; color: var(--text-muted);
+      letter-spacing: 0.04em; margin-bottom: 2rem;
+    }
+    .shop-collections .chip { color: var(--text-secondary); }
+
+    .product-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.55);
+    }
+    .product-card {
+      background: var(--bg-primary); position: relative;
+      display: flex; flex-direction: column;
+    }
+    .product-image {
+      aspect-ratio: 4/5; background: #fff;
+      position: relative; overflow: hidden;
+    }
+    .product-image::after {
+      content: attr(data-placeholder); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #888; font-size: 0.72rem; text-align: center; padding: 1rem;
+    }
+    .product-tag {
+      position: absolute; top: 0; left: 0;
+      background: var(--bg-primary); color: var(--accent-gold);
+      padding: 0.3rem 0.6rem; font-size: 0.6rem;
+      letter-spacing: 0.1em; text-transform: lowercase;
+      border-right: 1px solid var(--border-strong);
+      border-bottom: 1px solid var(--border-strong);
+      z-index: 2;
+    }
+    .product-info {
+      padding: 1.5rem; background: var(--bg-primary);
+      border-top: 1px solid var(--border-strong);
+      display: flex; flex-direction: column; gap: 0.4rem; flex: 1;
+    }
+    .product-name {
+      font-weight: 700; font-size: 1rem; text-transform: lowercase;
+    }
+    .product-subtitle { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.5; }
+    .product-price { font-weight: 700; font-size: 0.95rem; color: var(--accent-gold); margin-top: auto; }
+    .buy-button-slot { min-height: 2.6rem; margin-top: 0.4rem; }
+    .btn-fallback {
+      width: 100%; padding: 0.7rem; background: transparent;
+      border: 1px solid var(--border-strong); color: var(--text-primary);
+      font-size: 0.68rem; letter-spacing: 0.05em; text-transform: lowercase;
+      font-family: inherit; cursor: pointer; transition: all 0.15s var(--ease-out);
+    }
+    .btn-fallback:hover { background: var(--accent-gold); color: var(--bg-primary); border-color: var(--accent-gold); }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 900px) {
+      .product-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .shop-layout { grid-template-columns: 1fr; }
+      .cart-block { position: static; }
+      .block { padding: 0 1.5rem; }
+      main { padding: 2rem 0 4rem; }
+    }
+    @media (max-width: 600px) {
+      .product-grid { grid-template-columns: 1fr; }
+      .page-header { padding: 1rem 1.25rem; }
+      .logo { font-size: 1.2rem; }
     }
   </style>
 </head>
 <body>
-  <a href="/" class="home-link">back home</a>
-  <div class="logo">VIS<span class="tilde">Ã</span>O</div>
-  <div class="page-eyebrow">001 · 桜 sakura</div>
-  <h1 class="page-title">shop</h1>
-  <div class="placeholder-box">
-    <p class="placeholder-text">the sakura drop opens soon. enter your email on the home page to get drop access first.</p>
-    <span class="status-line"><span class="status-dot"></span>in development</span>
-  </div>
+  <header class="page-header">
+    <a href="/" class="home-link">back home</a>
+    <div class="logo">VIS<span class="tilde">Ã</span>O</div>
+  </header>
+
+  <main>
+    <div class="block">
+      <div class="ascii-rule"></div>
+
+      <div class="block-header">
+        <div>
+          <div class="drop-meta">
+            <span class="drop-status"><span class="status-dot"></span>live drop</span>
+            <span class="label">001 · 桜 sakura</span>
+          </div>
+          <h2 class="block-title">the <em>sakura</em> collection</h2>
+        </div>
+      </div>
+
+      <div class="shop-layout">
+        <!-- Cart sidebar -->
+        <aside class="cart-block">
+          <div class="cart-block-row cart-block-head">
+            <span>cart</span><span>$|usd</span>
+          </div>
+          <div class="cart-block-count"><span id="cartCount">0</span> items</div>
+          <div class="cart-block-actions">
+            <button onclick="alert('cart wiring coming soon')">[cart]</button>
+            <a href="/shop">[shop]</a>
+          </div>
+        </aside>
+
+        <div class="shop-main">
+          <div class="shop-filter">
+            <span class="item active">ALL</span><span class="sep">|</span>
+            <span class="item">POPULAR</span><span class="sep">|</span>
+            <span class="item">HOODIES</span><span class="sep">|</span>
+            <span class="item">TEES</span><span class="sep">|</span>
+            <span class="item">DENIM</span><span class="sep">|</span>
+            <span class="item">OUTERWEAR</span>
+          </div>
+
+          <div class="shop-collections">
+            collection:
+            <span class="chip">"sakura"</span> ·
+            <span class="chip">"lourdes"</span> ·
+            <span class="chip">"brasil"</span> ·
+            <span class="chip">"koi"</span>
+          </div>
+
+          <div class="product-grid">
+            <article class="product-card" data-product-id="sakura-hoodie">
+              <div class="product-image" data-placeholder="sakura hoodie · back-embroidery shot">
+                <span class="product-tag">1 of 100</span>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">the sakura</h3>
+                <p class="product-subtitle">heavyweight hoodie · back embroidery · 80k stitches</p>
+                <div class="product-price">$165</div>
+                <div class="buy-button-slot" id="buy-button-sakura-hoodie">
+                  <button class="btn-fallback">[ reserve ]</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="sakura-tee">
+              <div class="product-image" data-placeholder="sakura tee · front detail">
+                <span class="product-tag">1 of 150</span>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">the sakura tee</h3>
+                <p class="product-subtitle">boxy heavyweight · chest embroidery</p>
+                <div class="product-price">$85</div>
+                <div class="buy-button-slot" id="buy-button-sakura-tee">
+                  <button class="btn-fallback">[ reserve ]</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="product-card" data-product-id="sakura-denim">
+              <div class="product-image" data-placeholder="sakura denim · embroidered leg">
+                <span class="product-tag">1 of 50</span>
+              </div>
+              <div class="product-info">
+                <h3 class="product-name">the sakura denim</h3>
+                <p class="product-subtitle">raw selvedge · embroidered leg panel</p>
+                <div class="product-price">$185</div>
+                <div class="buy-button-slot" id="buy-button-sakura-denim">
+                  <button class="btn-fallback">[ reserve ]</button>
+                </div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

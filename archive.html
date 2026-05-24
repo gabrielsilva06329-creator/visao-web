@@ -8,25 +8,23 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-primary:     #000000;
-      --text-primary:   #ffffff;
-      --text-secondary: #aaaaaa;
-      --text-muted:     #666666;
-      --accent-gold:    #c9a961;
-      --border-strong:  rgba(255, 255, 255, 0.45);
-      --font-mono:      'JetBrains Mono', monospace;
+      --bg-primary: #000; --bg-secondary: #0a0a0a;
+      --text-primary: #fff; --text-secondary: #aaa; --text-muted: #666;
+      --accent-gold: #c9a961;
+      --border: rgba(255,255,255,0.18);
+      --border-strong: rgba(255,255,255,0.45);
+      --font-mono: 'JetBrains Mono', monospace;
     }
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html, body { overflow-x: hidden; overscroll-behavior-x: none; width: 100%; touch-action: pan-y; }
-    html { background: var(--bg-primary); }
+    html { background: var(--bg-primary); scroll-behavior: smooth; }
     body {
       background: var(--bg-primary); color: var(--text-primary);
       font-family: var(--font-mono); font-weight: 400; line-height: 1.6;
       min-height: 100vh; min-height: 100svh;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      padding: 5rem 1.5rem 3rem;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
     body::before {
@@ -34,59 +32,133 @@
       background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
       pointer-events: none; z-index: 1000;
     }
+
+    .page-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 2rem;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
     .home-link {
-      position: fixed; top: 1.5rem; left: 1.5rem; font-size: 0.7rem; letter-spacing: 0.08em;
-      color: var(--text-secondary); text-transform: lowercase; text-decoration: none;
-      transition: color 0.18s ease; z-index: 10;
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      color: var(--text-secondary); text-transform: lowercase;
+      text-decoration: none; transition: color 0.18s ease;
     }
     .home-link::before { content: '< '; color: var(--accent-gold); }
     .home-link:hover { color: var(--accent-gold); }
     .logo {
-      font-family: var(--font-mono); font-weight: 700; font-size: clamp(2rem, 7vw, 3rem);
-      letter-spacing: 0.04em; color: var(--text-primary); margin-bottom: 0.5rem; line-height: 1;
+      font-family: var(--font-mono); font-weight: 700; font-size: 1.4rem;
+      letter-spacing: 0.04em; line-height: 1;
     }
     .logo .tilde { color: var(--accent-gold); font-size: 1.15em; }
-    .page-eyebrow {
-      font-size: 0.7rem; letter-spacing: 0.12em; color: var(--text-muted);
-      text-transform: lowercase; margin-bottom: 0.4rem;
+
+    main { padding: 4rem 0 6rem; }
+    .block { max-width: 1440px; margin: 0 auto; padding: 0 3rem; }
+    .block-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 3rem; gap: 2rem; flex-wrap: wrap;
     }
-    .page-eyebrow::before { content: '// '; color: var(--accent-gold); }
-    .page-title {
-      font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 700;
-      letter-spacing: -0.01em; text-transform: lowercase; margin-bottom: 2rem;
+    .block-title {
+      font-weight: 700; font-size: clamp(1.5rem, 3.5vw, 2.4rem);
+      line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase;
     }
-    .placeholder-box {
-      border: 1px solid var(--border-strong); padding: 2rem 2.5rem;
-      max-width: 420px; width: 100%; text-align: center;
-      background: rgba(10, 10, 10, 0.6);
+    .block-title em { color: var(--accent-gold); font-style: normal; }
+    .ascii-rule {
+      color: var(--text-muted); overflow: hidden; white-space: nowrap;
+      height: 1.4em; line-height: 1.4; font-size: 0.8rem;
+      user-select: none; opacity: 0.6; margin-bottom: 3rem;
     }
-    .placeholder-text {
-      font-size: 0.82rem; color: var(--text-secondary); line-height: 1.75; margin-bottom: 1.25rem;
+    .ascii-rule::after {
+      content: "========================================================================================================================================================================================================";
     }
-    .status-line {
-      font-size: 0.7rem; letter-spacing: 0.08em; color: var(--accent-gold);
-      text-transform: lowercase; display: inline-flex; align-items: center; gap: 0.4rem;
+    .label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: lowercase; color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-bottom: 1rem;
     }
-    .status-dot {
-      width: 7px; height: 7px; background: var(--accent-gold);
-      animation: blink 1s step-end infinite;
+    .label::before { content: '// '; color: var(--accent-gold); }
+
+    /* === ARCHIVE GRID === */
+    .archive-row {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.55);
     }
-    @keyframes blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
-    @media (max-width: 480px) {
-      body { padding: 4rem 1rem 2rem; }
-      .placeholder-box { padding: 1.5rem 1.25rem; }
-      .home-link { top: 1rem; left: 1rem; }
+    .archive-card {
+      aspect-ratio: 3/4; position: relative; overflow: hidden;
+      background: var(--bg-secondary); transition: background 0.15s ease;
+      display: block; text-decoration: none; color: inherit;
+    }
+    .archive-card::after {
+      content: attr(data-placeholder); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.7rem; text-align: center; padding: 1rem;
+    }
+    .archive-card:hover { background: #1a1a1a; }
+    .archive-card-meta {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 1rem; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+      z-index: 2;
+    }
+    .archive-card-name {
+      font-weight: 700; font-size: 0.95rem;
+      text-transform: lowercase; margin-bottom: 0.3rem;
+    }
+    .archive-card-status {
+      font-size: 0.62rem; letter-spacing: 0.1em;
+      text-transform: lowercase; color: var(--accent-gold);
+    }
+
+    @media (max-width: 900px) { .archive-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) {
+      .archive-row { grid-template-columns: 1fr; }
+      .block { padding: 0 1.5rem; }
+      .page-header { padding: 1rem 1.25rem; }
+      .logo { font-size: 1.2rem; }
+      main { padding: 2rem 0 4rem; }
     }
   </style>
 </head>
 <body>
-  <a href="/" class="home-link">back home</a>
-  <div class="logo">VIS<span class="tilde">Ã</span>O</div>
-  <div class="page-eyebrow">past drops · sold out</div>
-  <h1 class="page-title">archive</h1>
-  <div class="placeholder-box">
-    <p class="placeholder-text">every drop is limited. once it's gone, it's gone. the archive lives here.</p>
-    <span class="status-line"><span class="status-dot"></span>in development</span>
-  </div>
+  <header class="page-header">
+    <a href="/" class="home-link">back home</a>
+    <div class="logo">VIS<span class="tilde">Ã</span>O</div>
+  </header>
+
+  <main>
+    <div class="block">
+      <div class="ascii-rule"></div>
+
+      <div class="block-header">
+        <div>
+          <div class="label">archive</div>
+          <h2 class="block-title">past <em>drops</em></h2>
+        </div>
+      </div>
+
+      <div class="archive-row">
+        <a href="/shop" class="archive-card" data-placeholder="drop 001 · sakura preview">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">001 · 桜 sakura</h3>
+            <span class="archive-card-status">live now</span>
+          </div>
+        </a>
+        <a href="#" class="archive-card" data-placeholder="drop 002 · in production">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">002 · coming soon</h3>
+            <span class="archive-card-status">in production</span>
+          </div>
+        </a>
+        <a href="#" class="archive-card" data-placeholder="drop 003 · brasil capsule preview">
+          <div class="archive-card-meta">
+            <h3 class="archive-card-name">003 · brasil</h3>
+            <span class="archive-card-status">in development</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </main>
 </body>
 </html>

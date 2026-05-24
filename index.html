@@ -95,13 +95,13 @@
       scroll-behavior: smooth;
       background: var(--bg-primary);
       -webkit-text-size-adjust: 100%;
-      /* Lock horizontal axis — prevents the iOS elastic-bounce swipe-into-
-         blackness when any decorative element (vines, drifters) sits
-         slightly outside the viewport. overscroll-behavior also blocks
-         the rubber-band on browsers that respect it. */
-      overflow-x: hidden;
-      overscroll-behavior-x: none;
+      /* Total lock — no scrolling, no bounce, no rubber-band on any axis.
+         The homepage is a single-viewport landing; all other content
+         lives on dedicated /shop, /about, /archive pages. */
+      overflow: hidden;
+      overscroll-behavior: none;
       width: 100%;
+      height: 100%;
     }
 
     body {
@@ -110,13 +110,16 @@
       font-family: var(--font-body);
       font-weight: 400;
       line-height: 1.6;
-      overflow-x: hidden;
-      overscroll-behavior-x: none;
+      /* Homepage is locked to a single viewport — the hero is everything.
+         All other content lives on dedicated /shop, /about, /archive,
+         etc. pages reached via the nav. Nothing below the hero to scroll
+         to, so we lock scroll entirely (both axes). Mobile media queries
+         shrink the hero stack to fit on each phone size. */
+      overflow: hidden;
+      overscroll-behavior: none;
       width: 100%;
+      height: 100%;
       position: relative;
-      /* Only allow vertical pan gestures — kills horizontal swipe entirely
-         on touch devices. No interactive horizontal sliders on this page. */
-      touch-action: pan-y;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
@@ -1939,13 +1942,15 @@
     </div>
 
     <!-- Vertical nav list under the box. Each item navigates to its own
-         dedicated page (no in-page anchor scrolling). Placeholder pages
-         live at /shop.html, /lookbook.html etc. — Vercel auto-strips the
-         .html so the clean URL /shop works. -->
+         dedicated page (no in-page anchor scrolling). The homepage
+         contains ONLY the hero — all other content lives on these
+         dedicated pages. Vercel auto-strips the .html extension so
+         clean URLs like /shop and /about route correctly. -->
     <ul class="left-nav">
       <li><a href="/shop">shop</a></li>
       <li><a href="/lookbook">lookbook</a></li>
       <li><a href="/archive">archive</a></li>
+      <li><a href="/about">about</a></li>
       <li><a href="/shipping">shipping</a></li>
       <li><a href="/contact">contact</a></li>
       <li><a href="/retail-stores">retail stores</a></li>
@@ -1954,290 +1959,6 @@
     </div>
   </section>
 
-  <!-- =======================================================================
-       2 · SHOP / LATEST DROP · main commerce panel
-
-       === HOW TO ADD A PRODUCT ===
-       1. Copy one of the <article class="product-card"> blocks below
-       2. Change data-product-id to a unique value
-       3. Update image (data-placeholder), name, subtitle, price
-       4. Change the inner div id="buy-button-NAME" to match
-       5. When wiring Shopify, paste your generated Buy Button code
-          inside that buy-button-slot div.
-       ======================================================================= -->
-  <section id="drops" class="block-wrap reveal">
-    <div class="block">
-      <div class="ascii-rule section-divider"></div>
-
-      <div class="block-header">
-        <div>
-          <div class="drop-meta">
-            <span class="drop-status"><span class="status-dot"></span>live drop</span>
-            <span class="label">001 · 桜 sakura</span>
-          </div>
-          <h2 class="block-title">the <em>sakura</em> collection</h2>
-        </div>
-        <a href="#" class="btn-link">view all pieces</a>
-      </div>
-
-      <div class="shop-layout">
-
-        <!-- Terminal cart sidebar -->
-        <aside class="cart-block">
-          <div class="cart-block-row cart-block-head">
-            <span>cart</span><span>$|usd</span>
-          </div>
-          <div class="cart-block-count"><span id="cartCount">0</span> items</div>
-          <div class="cart-block-actions">
-            <button onclick="openCart()">[cart]</button>
-            <a href="#drops">[shop]</a>
-          </div>
-        </aside>
-
-        <div class="shop-main">
-          <!-- Filter row -->
-          <div class="shop-filter">
-            <span class="item active">ALL</span><span class="sep">|</span>
-            <span class="item">POPULAR</span><span class="sep">|</span>
-            <span class="item">HOODIES</span><span class="sep">|</span>
-            <span class="item">TEES</span><span class="sep">|</span>
-            <span class="item">DENIM</span><span class="sep">|</span>
-            <span class="item">OUTERWEAR</span>
-          </div>
-
-          <!-- Collection chips -->
-          <div class="shop-collections">
-            collection:
-            <span class="chip">"sakura"</span> ·
-            <span class="chip">"lourdes"</span> ·
-            <span class="chip">"brasil"</span> ·
-            <span class="chip">"koi"</span>
-          </div>
-
-          <div class="product-grid">
-
-            <!-- === PRODUCT CARD 1 === -->
-            <article class="product-card" data-product-id="sakura-hoodie">
-              <div class="product-image" data-placeholder="sakura hoodie · back-embroidery shot">
-                <span class="product-tag">1 of 100</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura</h3>
-                <p class="product-subtitle">heavyweight hoodie · back embroidery · 80k stitches</p>
-                <div class="product-price">$165</div>
-                <!-- SHOPIFY BUY BUTTON #1: paste generated code's <div> inside, or
-                     update Shopify's "node:" reference to target this div's id -->
-                <div class="buy-button-slot" id="buy-button-sakura-hoodie">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-
-            <!-- === PRODUCT CARD 2 === -->
-            <article class="product-card" data-product-id="sakura-tee">
-              <div class="product-image" data-placeholder="sakura tee · front detail">
-                <span class="product-tag">1 of 150</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura tee</h3>
-                <p class="product-subtitle">boxy heavyweight · chest embroidery</p>
-                <div class="product-price">$85</div>
-                <!-- SHOPIFY BUY BUTTON #2 -->
-                <div class="buy-button-slot" id="buy-button-sakura-tee">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-
-            <!-- === PRODUCT CARD 3 === -->
-            <article class="product-card" data-product-id="sakura-denim">
-              <div class="product-image" data-placeholder="sakura denim · embroidered leg">
-                <span class="product-tag">1 of 50</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura denim</h3>
-                <p class="product-subtitle">raw selvedge · embroidered leg panel</p>
-                <div class="product-price">$185</div>
-                <!-- SHOPIFY BUY BUTTON #3 -->
-                <div class="buy-button-slot" id="buy-button-sakura-denim">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================================================================
-       3 · CRAFTSMANSHIP · "wearable art" positioning
-       ======================================================================= -->
-  <section id="craft" class="block-wrap reveal">
-    <div class="block">
-      <div class="ascii-rule section-divider"></div>
-
-      <div class="craft">
-        <div class="craft-image"></div>
-        <div class="craft-content">
-          <div class="label block-eyebrow">// a arte · the craft</div>
-          <h2>threads, not <em>prints</em>.</h2>
-          <p>Every VISÃO piece is embroidered, not printed. Stitched line by line in heavyweight thread on heavyweight cotton — the kind of work that takes hours per garment and lasts decades.</p>
-          <p>One factory. Every thread color chosen by hand. Every sample signed off. Each drop is limited because real embroidery can't be rushed.</p>
-
-          <div class="ascii-rule dashed"></div>
-
-          <div class="craft-stats">
-            <div class="stat-line">
-              <span class="stat-key">stitches/piece</span>
-              <span class="stat-dots"></span>
-              <span class="stat-val">80,000+</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-key">cotton</span>
-              <span class="stat-dots"></span>
-              <span class="stat-val">400gsm heavyweight</span>
-            </div>
-            <div class="stat-line">
-              <span class="stat-key">units/drop</span>
-              <span class="stat-dots"></span>
-              <span class="stat-val">100</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================================================================
-       4 · HERITAGE · the Brazilian story
-       ======================================================================= -->
-  <section id="heritage" class="block-wrap reveal">
-    <div class="block">
-      <div class="ascii-rule section-divider"></div>
-
-      <div class="heritage">
-        <div class="heritage-image"></div>
-        <div class="heritage-content">
-          <div class="label block-eyebrow">// herança · the story</div>
-          <h2>it started with <em>lourdes.</em></h2>
-          <p>VISÃO started with my grandmother, Lourdes. She came to the U.S. from Brazil, and she's the one who taught me what working with your hands really means.</p>
-          <p>The brand is named in her language. Every piece is embroidered, never printed — because that's how she'd want it made.</p>
-          <p class="heritage-signature">— Gabriel, founder</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================================================================
-       5 · ARCHIVE / PAST DROPS
-       Build out as each drop ships. Each card links to that drop's page.
-       ======================================================================= -->
-  <section id="archive" class="block-wrap reveal">
-    <div class="block">
-      <div class="ascii-rule section-divider"></div>
-
-      <div class="block-header">
-        <div>
-          <div class="label block-eyebrow">// archive</div>
-          <h2 class="block-title">past <em>drops</em></h2>
-        </div>
-        <a href="#" class="btn-link">view full archive</a>
-      </div>
-
-      <div class="archive-row">
-        <!-- === ARCHIVE CARD: duplicate per drop === -->
-        <a href="#" class="archive-card" data-placeholder="drop 001 · sakura preview">
-          <div class="archive-card-meta">
-            <h3 class="archive-card-name">001 · 桜 sakura</h3>
-            <span class="archive-card-status">live now</span>
-          </div>
-        </a>
-        <a href="#" class="archive-card" data-placeholder="drop 002 · in production">
-          <div class="archive-card-meta">
-            <h3 class="archive-card-name">002 · coming soon</h3>
-            <span class="archive-card-status">in production</span>
-          </div>
-        </a>
-        <a href="#" class="archive-card" data-placeholder="drop 003 · brasil capsule preview">
-          <div class="archive-card-meta">
-            <h3 class="archive-card-name">003 · brasil</h3>
-            <span class="archive-card-status">in development</span>
-          </div>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- =======================================================================
-       6 · MANIFESTO + NEWSLETTER
-       ======================================================================= -->
-  <section class="manifesto reveal">
-    <div class="block">
-      <div class="ascii-rule"></div>
-      <p class="manifesto-text">"we don't make clothes for everyone. <em>we make them for people who'd rather build something than wear someone else's logo.</em>"</p>
-      <div class="newsletter">
-        <form class="newsletter-form" onsubmit="handleNewsletter(event)">
-          <input type="email" placeholder="enter email for drop access" required aria-label="Email">
-          <button type="submit">subscribe &rarr;</button>
-        </form>
-        <p class="newsletter-success">// welcome. you're on the list.</p>
-      </div>
-      <div class="ascii-rule"></div>
-    </div>
-  </section>
-
-  <!-- =======================================================================
-       7 · FOOTER
-       ======================================================================= -->
-  <footer>
-    <div class="block" style="padding:0;">
-      <div class="ascii-rule"></div>
-    </div>
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <span class="logo">VIS<span class="tilde">Ã</span>O</span>
-        <p>embroidered, not printed. limited drops. brazilian heritage, japanese influence.</p>
-        <div class="footer-social">
-          <a href="https://instagram.com/visao" target="_blank" rel="noopener">IG</a>
-          <a href="https://tiktok.com/@visao" target="_blank" rel="noopener">TT</a>
-          <a href="https://youtube.com/@vi3ion" target="_blank" rel="noopener">YT</a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4>shop</h4>
-        <ul>
-          <li><a href="#drops">drop 001 · sakura</a></li>
-          <li><a href="#archive">archive</a></li>
-          <li><a href="#">size guide</a></li>
-          <li><a href="#">lookbook</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>about</h4>
-        <ul>
-          <li><a href="#heritage">herança</a></li>
-          <li><a href="#craft">craftsmanship</a></li>
-          <li><a href="#">sustainability</a></li>
-          <li><a href="#">contact</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>support</h4>
-        <ul>
-          <li><a href="#">shipping</a></li>
-          <li><a href="#">returns</a></li>
-          <li><a href="#">faq</a></li>
-          <li><a href="#">track order</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span>© 2026 visão · made with herança</span>
-      <span>designed in florida · manufactured with care</span>
-    </div>
-  </footer>
 
   <!-- =======================================================================
        OVERLAYS · cart drawer + mobile menu
@@ -2265,13 +1986,14 @@
       <button class="drawer-close" onclick="closeMobileMenu()" aria-label="Close menu">×</button>
     </div>
     <div class="mobile-menu-nav">
-      <a href="#drops" onclick="closeMobileMenu()">shop</a>
-      <a href="#" onclick="closeMobileMenu()">lookbook</a>
-      <a href="#archive" onclick="closeMobileMenu()">archive</a>
-      <a href="#" onclick="closeMobileMenu()">shipping</a>
-      <a href="#" onclick="closeMobileMenu()">contact</a>
-      <a href="#" onclick="closeMobileMenu()">retail stores</a>
-      <a href="#" onclick="closeMobileMenu()">stickers</a>
+      <a href="/shop">shop</a>
+      <a href="/lookbook">lookbook</a>
+      <a href="/archive">archive</a>
+      <a href="/about">about</a>
+      <a href="/shipping">shipping</a>
+      <a href="/contact">contact</a>
+      <a href="/retail-stores">retail stores</a>
+      <a href="/stickers">stickers</a>
     </div>
   </aside>
 

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>about — VISÃO</title>
+  <meta name="description" content="about VISÃO. embroidered, not printed. brazilian heritage, japanese influence. the story of Lourdes and the craft.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-primary: #000; --bg-secondary: #0a0a0a;
+      --text-primary: #fff; --text-secondary: #aaa; --text-muted: #666;
+      --accent-gold: #c9a961;
+      --accent-emerald: #4a8f6a;
+      --border: rgba(255,255,255,0.18);
+      --border-strong: rgba(255,255,255,0.45);
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { overflow-x: hidden; overscroll-behavior-x: none; width: 100%; touch-action: pan-y; }
+    html { background: var(--bg-primary); scroll-behavior: smooth; }
+    body {
+      background: var(--bg-primary); color: var(--text-primary);
+      font-family: var(--font-mono); font-weight: 400; line-height: 1.6;
+      min-height: 100vh; min-height: 100svh;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      background-image: repeating-linear-gradient(to bottom, rgba(255,255,255,0.03) 0px, rgba(255,255,255,0.03) 1px, transparent 1px, transparent 3px);
+      pointer-events: none; z-index: 1000;
+    }
+
+    .page-header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.25rem 2rem;
+      background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .home-link {
+      font-size: 0.72rem; letter-spacing: 0.08em;
+      color: var(--text-secondary); text-transform: lowercase;
+      text-decoration: none; transition: color 0.18s ease;
+    }
+    .home-link::before { content: '< '; color: var(--accent-gold); }
+    .home-link:hover { color: var(--accent-gold); }
+    .logo {
+      font-family: var(--font-mono); font-weight: 700; font-size: 1.4rem;
+      letter-spacing: 0.04em; line-height: 1;
+    }
+    .logo .tilde { color: var(--accent-gold); font-size: 1.15em; }
+
+    main { padding: 4rem 0 0; }
+    section.block-wrap { padding: 4rem 0; }
+    .block { max-width: 1440px; margin: 0 auto; padding: 0 3rem; }
+    .ascii-rule {
+      color: var(--text-muted); overflow: hidden; white-space: nowrap;
+      height: 1.4em; line-height: 1.4; font-size: 0.8rem;
+      user-select: none; opacity: 0.6;
+    }
+    .ascii-rule.section-divider { margin-bottom: 3rem; }
+    .ascii-rule::after {
+      content: "========================================================================================================================================================================================================";
+    }
+    .ascii-rule.dashed::after {
+      content: "--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------";
+    }
+    .label {
+      font-size: 0.68rem; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: lowercase; color: var(--text-muted);
+      display: inline-flex; align-items: center; gap: 0.5rem;
+    }
+    .block-eyebrow { margin-bottom: 1rem; }
+
+    /* === CRAFTSMANSHIP === */
+    .craft {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .craft-image {
+      aspect-ratio: 1/1; border: 1px solid var(--border-strong);
+      background: var(--bg-secondary); position: relative; overflow: hidden;
+    }
+    .craft-image::after {
+      content: 'CRAFTSMANSHIP · macro embroidery detail · 1000×1000';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.72rem; text-align: center; padding: 1rem;
+    }
+    .craft-content h2 {
+      font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.4rem);
+      line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase;
+      margin-bottom: 1.5rem;
+    }
+    .craft-content h2 em { color: var(--accent-gold); font-style: normal; }
+    .craft-content p {
+      color: var(--text-secondary); font-size: 0.85rem;
+      line-height: 1.75; margin-bottom: 1rem; max-width: 460px;
+    }
+    .craft-stats { margin-top: 1.5rem; }
+    .stat-line {
+      display: flex; align-items: baseline; gap: 0.5rem;
+      font-size: 0.8rem; margin-bottom: 0.45rem;
+    }
+    .stat-key { color: var(--text-secondary); white-space: nowrap; }
+    .stat-dots {
+      flex: 1; border-bottom: 1px dotted var(--text-muted);
+      transform: translateY(-0.18em);
+    }
+    .stat-val { color: var(--accent-gold); font-weight: 700; white-space: nowrap; }
+
+    /* === HERITAGE === */
+    .heritage {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 4rem; align-items: center;
+    }
+    .heritage-image {
+      aspect-ratio: 4/5; border: 1px solid var(--border-strong);
+      background: var(--bg-secondary); position: relative; overflow: hidden;
+    }
+    .heritage-image::after {
+      content: 'HERITAGE · family photo / Brazil landscape / artwork · 800×1000';
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); font-size: 0.72rem; text-align: center; padding: 2rem;
+    }
+    .heritage-content h2 {
+      font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.4rem);
+      line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase;
+      margin-bottom: 1.5rem;
+    }
+    .heritage-content h2 em { color: var(--accent-emerald); font-style: normal; }
+    .heritage-content p {
+      color: var(--text-secondary); font-size: 0.85rem;
+      line-height: 1.75; margin-bottom: 1rem; max-width: 460px;
+    }
+    .heritage-signature {
+      color: var(--accent-gold); font-size: 0.85rem; margin-top: 1.5rem;
+    }
+
+    /* === FOOTER === */
+    footer {
+      padding: 3rem 0 2rem;
+      border-top: 1px solid var(--border);
+    }
+    .footer-grid {
+      max-width: 1440px; margin: 2rem auto 0; padding: 0 3rem;
+      display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 3rem;
+    }
+    .footer-brand .logo { font-size: 1.6rem; }
+    .footer-brand p {
+      color: var(--text-secondary); font-size: 0.8rem;
+      line-height: 1.7; margin: 0.8rem 0 1rem; max-width: 320px;
+    }
+    .footer-social { display: flex; gap: 1rem; }
+    .footer-social a {
+      color: var(--text-secondary); font-size: 0.75rem; letter-spacing: 0.1em;
+      text-decoration: none; transition: color 0.15s ease;
+    }
+    .footer-social a:hover { color: var(--accent-gold); }
+    .footer-col h4 {
+      font-size: 0.7rem; font-weight: 500; letter-spacing: 0.08em;
+      text-transform: lowercase; color: var(--accent-gold);
+      margin-bottom: 0.8rem;
+    }
+    .footer-col ul { list-style: none; padding: 0; }
+    .footer-col li { margin-bottom: 0.5rem; }
+    .footer-col a {
+      color: var(--text-secondary); font-size: 0.78rem;
+      text-decoration: none; transition: color 0.15s ease;
+    }
+    .footer-col a:hover { color: var(--text-primary); }
+
+    @media (max-width: 900px) {
+      .craft, .heritage { grid-template-columns: 1fr; gap: 2rem; }
+      .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+    }
+    @media (max-width: 600px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; }
+      .block { padding: 0 1.5rem; }
+      .page-header { padding: 1rem 1.25rem; }
+      .logo { font-size: 1.2rem; }
+      main { padding: 2rem 0 0; }
+      section.block-wrap { padding: 2.5rem 0; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <a href="/" class="home-link">back home</a>
+    <div class="logo">VIS<span class="tilde">Ã</span>O</div>
+  </header>
+
+  <main>
+    <!-- CRAFTSMANSHIP -->
+    <section class="block-wrap">
+      <div class="block">
+        <div class="ascii-rule section-divider"></div>
+        <div class="craft">
+          <div class="craft-image"></div>
+          <div class="craft-content">
+            <div class="label block-eyebrow">// a arte · the craft</div>
+            <h2>threads, not <em>prints</em>.</h2>
+            <p>Every VISÃO piece is embroidered, not printed. Stitched line by line in heavyweight thread on heavyweight cotton — the kind of work that takes hours per garment and lasts decades.</p>
+            <p>One factory. Every thread color chosen by hand. Every sample signed off. Each drop is limited because real embroidery can't be rushed.</p>
+            <div class="ascii-rule dashed"></div>
+            <div class="craft-stats">
+              <div class="stat-line">
+                <span class="stat-key">stitches/piece</span>
+                <span class="stat-dots"></span>
+                <span class="stat-val">80,000+</span>
+              </div>
+              <div class="stat-line">
+                <span class="stat-key">cotton</span>
+                <span class="stat-dots"></span>
+                <span class="stat-val">400gsm heavyweight</span>
+              </div>
+              <div class="stat-line">
+                <span class="stat-key">units/drop</span>
+                <span class="stat-dots"></span>
+                <span class="stat-val">100</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HERITAGE -->
+    <section class="block-wrap">
+      <div class="block">
+        <div class="ascii-rule section-divider"></div>
+        <div class="heritage">
+          <div class="heritage-image"></div>
+          <div class="heritage-content">
+            <div class="label block-eyebrow">// herança · the story</div>
+            <h2>it started with <em>lourdes.</em></h2>
+            <p>VISÃO started with my grandmother, Lourdes. She came to the U.S. from Brazil, and she's the one who taught me what working with your hands really means.</p>
+            <p>The brand is named in her language. Every piece is embroidered, never printed — because that's how she'd want it made.</p>
+            <p class="heritage-signature">— Gabriel, founder</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="block" style="padding:0;">
+      <div class="ascii-rule"></div>
+    </div>
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo">VIS<span class="tilde">Ã</span>O</span>
+        <p>embroidered, not printed. limited drops. brazilian heritage, japanese influence.</p>
+        <div class="footer-social">
+          <a href="https://instagram.com/visao" target="_blank" rel="noopener">IG</a>
+          <a href="https://tiktok.com/@visao" target="_blank" rel="noopener">TT</a>
+          <a href="https://youtube.com/@vi3ion" target="_blank" rel="noopener">YT</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>shop</h4>
+        <ul>
+          <li><a href="/shop">drop 001 · sakura</a></li>
+          <li><a href="/archive">archive</a></li>
+          <li><a href="/lookbook">lookbook</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>about</h4>
+        <ul>
+          <li><a href="/about">herança</a></li>
+          <li><a href="/about">craftsmanship</a></li>
+          <li><a href="/contact">contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>support</h4>
+        <ul>
+          <li><a href="/shipping">shipping</a></li>
+          <li><a href="/contact">returns</a></li>
+          <li><a href="/retail-stores">retail stores</a></li>
+          <li><a href="/stickers">stickers</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
