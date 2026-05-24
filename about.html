@@ -50,7 +50,7 @@
     .home-link:hover { color: var(--accent-gold); }
     .logo {
       position: absolute; left: 50%; transform: translateX(-50%);
-      display: block; height: 38px; width: auto; max-width: 120px;
+      display: block; height: 52px; width: auto; max-width: 170px;
       object-fit: contain;
       transition: transform 0.2s ease, filter 0.2s ease;
       filter: drop-shadow(0 1px 4px rgba(0,0,0,0.5));
@@ -256,6 +256,30 @@
       .craft-content h2, .heritage-content h2 { font-size: 1.25rem; }
       .craft-content p, .heritage-content p { font-size: 0.75rem; }
     }
+
+    /* === LOGO RESPONSIVE SIZING — phone → TV === */
+    @media (max-width: 600px) {
+      .logo { height: 42px; max-width: 130px; }
+    }
+    @media (max-width: 375px) {
+      .logo { height: 38px; max-width: 110px; }
+    }
+    @media (min-width: 1280px) {
+      .logo { height: 60px; max-width: 195px; }
+    }
+    @media (min-width: 1600px) {
+      .logo { height: 68px; max-width: 220px; }
+      .page-header { padding: 1.5rem 2.5rem; }
+      .home-link { font-size: 0.82rem; }
+    }
+    @media (min-width: 1920px) {
+      .logo { height: 80px; max-width: 260px; }
+      .page-header { padding: 1.75rem 3rem; }
+      .home-link { font-size: 0.9rem; }
+      .nav-toggle { width: 2.6rem; height: 2.6rem; }
+      .nav-toggle span { width: 1.2rem; }
+    }
+
   </style>
 </head>
 <body>

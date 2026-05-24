@@ -689,6 +689,29 @@
       .mascot-wrap     { max-width: 150px; }
     }
 
+    /* === TV / LARGE MONITORS (≥1280px wide, generous height) ===
+       Scale everything up so the homepage doesn't feel lost in the
+       middle of a giant display. Breakpoints layer additively: tablet/
+       laptop default, big monitor, true TV. */
+    @media (min-width: 1280px) and (min-height: 800px) {
+      .hero-box        { max-width: 360px; padding: 2.25rem; gap: var(--s-3); }
+      .hero-box .logo  { max-width: 230px; max-height: 115px; }
+      .hero-box-tag    { font-size: 0.72rem; }
+      .mascot-wrap     { max-width: 300px; }
+      .left-nav a      { font-size: 1.05rem; }
+    }
+    @media (min-width: 1920px) and (min-height: 900px) {
+      .hero-box        { max-width: 420px; padding: 2.75rem; gap: var(--s-4); }
+      .hero-box .logo  { max-width: 280px; max-height: 140px; }
+      .hero-box-tag    { font-size: 0.8rem; }
+      .mascot-wrap     { max-width: 360px; }
+      .hero-email-form input  { font-size: 0.85rem; padding: 0.8rem 0.9rem; }
+      .hero-email-form button { padding: 0.8rem 1rem; }
+      .hero-social a   { font-size: 0.85rem; }
+      .left-nav a      { font-size: 1.15rem; }
+      .left-nav        { gap: 0.8rem; }
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
