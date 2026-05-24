@@ -593,14 +593,35 @@
       }
     }
 
-    /* Mobile side-branch tuning — KEEP the branches visible on phones
-       (they're brand-critical) but narrow them so they don't crowd the
-       smaller box. The trunk now anchors at the corner with only 40px
-       of horizontal protrusion instead of 60. */
+    /* === Phone breakpoint (≤480px) — comprehensive mobile sizing.
+       Shrinks the box, reduces padding/mascot/logo, pulls the stack
+       UP from center to top-aligned (so the nav has room below the
+       box on short phone viewports), and narrows the side branches. */
     @media (max-width: 480px) {
+      .hero            { align-items: flex-start; padding: 1.5rem var(--gutter); }
+      .hero-stack      { gap: var(--s-3); }
+      .hero-box        { max-width: 280px; padding: 1.1rem; gap: var(--s-2); }
+      .hero-box .logo  { font-size: 1.5rem; }
+      .hero-box-tag    { font-size: 0.58rem; margin-top: -0.4rem; }
+      .mascot-wrap     { max-width: 210px; margin: 0 auto 24px; }
+      .mascot          { font-size: 0.56rem; padding: 0.7rem; }
+      .hero-email-form input  { font-size: 0.7rem; padding: 0.55rem 0.6rem; }
+      .hero-email-form button { padding: 0.55rem 0.8rem; }
+      .hero-social a   { font-size: 0.66rem; }
+      /* Narrower side branches so they don't crowd the smaller box */
       .side-vines       { width: 44px; }
       .side-vines.left  { left: -44px; }
       .side-vines.right { right: -44px; }
+    }
+
+    /* Even narrower phones (≤375px — iPhone SE / Mini) — tighten further */
+    @media (max-width: 375px) {
+      .hero-box         { max-width: 260px; padding: 0.9rem; }
+      .hero-box .logo   { font-size: 1.35rem; }
+      .mascot-wrap      { max-width: 190px; margin: 0 auto 20px; }
+      .side-vines       { width: 36px; }
+      .side-vines.left  { left: -36px; }
+      .side-vines.right { right: -36px; }
     }
 
     @keyframes fadeIn {
@@ -808,10 +829,14 @@
     }
 
     /* Mobile font + spacing tweaks for the nav under the box.
-       (No display:none — the nav is the primary navigation now.) */
+       (No display:none — the nav is the primary navigation on phones.)
+       Bumped font from 0.85→1rem so nav items are comfortably tappable. */
     @media (max-width: 480px) {
-      .left-nav        { gap: 0.5rem; padding-left: 0.8rem; padding-right: 0.8rem; }
-      .left-nav a      { font-size: 0.85rem; }
+      .left-nav        { gap: 0.55rem; padding-left: 0.8rem; padding-right: 0.8rem; }
+      .left-nav a      { font-size: 1rem; letter-spacing: 0.07em; }
+    }
+    @media (max-width: 375px) {
+      .left-nav a      { font-size: 0.95rem; }
     }
 
     /* Hero social row */
@@ -1759,7 +1784,7 @@
            deep-green tropical leaves (#leafDark symbol). viewBox 60×600
            with xMidYMid meet so leaves render at correct aspect ratio
            regardless of actual card height. -->
-      <svg class="side-vines left" viewBox="0 0 60 600" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
+      <svg class="side-vines left" viewBox="0 0 60 600" preserveAspectRatio="xMidYMin meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
         <!-- Main trunk: hugs the card's left edge with gentle wiggles -->
         <path class="vine-path" d="M 60 0 Q 50 60, 55 120 Q 50 180, 45 240 Q 50 300, 48 360 Q 45 420, 50 480 Q 52 540, 50 600" stroke="#5a3a22" stroke-width="3" fill="none" stroke-linecap="round" style="animation-delay: 0.3s"/>
         <!-- Outward-reaching sub-branches (to the LEFT, away from the card) -->
@@ -1807,7 +1832,7 @@
            the card's right border. Sub-branches reach OUTWARD (to the
            RIGHT, away from the card). Abundant green leaves (#leaf) AND
            pink blossoms (#sakura / #sakuraDeep). Mirrors the LEFT side. -->
-      <svg class="side-vines right" viewBox="0 0 60 600" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
+      <svg class="side-vines right" viewBox="0 0 60 600" preserveAspectRatio="xMidYMin meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
         <!-- Main cherry-bark trunk: hugs the card's right edge with gentle wiggles -->
         <path class="vine-path" d="M 0 0 Q 10 60, 5 120 Q 10 180, 15 240 Q 10 300, 12 360 Q 15 420, 10 480 Q 8 540, 10 600" stroke="#3a2820" stroke-width="3" fill="none" stroke-linecap="round" style="animation-delay: 0.4s"/>
         <!-- Outward-reaching sub-branches (to the RIGHT, away from the card) -->
