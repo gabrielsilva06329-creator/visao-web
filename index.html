@@ -593,10 +593,14 @@
       }
     }
 
-    /* Hide vines on tiny screens — they crowd the narrow box.
-       Drifters keep going; they live in the ambient layer over the bg. */
+    /* Mobile side-branch tuning — KEEP the branches visible on phones
+       (they're brand-critical) but narrow them so they don't crowd the
+       smaller box. The trunk now anchors at the corner with only 40px
+       of horizontal protrusion instead of 60. */
     @media (max-width: 480px) {
-      .side-vines, .wrap-vines { display: none; }
+      .side-vines       { width: 44px; }
+      .side-vines.left  { left: -44px; }
+      .side-vines.right { right: -44px; }
     }
 
     @keyframes fadeIn {
@@ -673,21 +677,39 @@
     .hero-email-form button:hover { background: var(--text-primary); }
 
     /* =====================================================================
-       LEFT-SIDE NAV — floats over the hero image, no container/border/bg.
-       Absolutely positioned within .hero: vertically centered, 3rem from
-       the left edge. Hidden <=768px (the hamburger handles mobile nav).
+       HERO STACK — vertical column wrapper that holds the .hero-box AND
+       the .left-nav. Lets us center both as a group inside .hero, with
+       the box on top and the nav underneath. Replaces the old layout
+       where .left-nav floated to the left of the hero.
+       ===================================================================== */
+
+    .hero-stack {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--s-6);
+    }
+
+    /* =====================================================================
+       HERO NAV — vertical list under the VISÃO box. Sits as the second
+       child inside .hero-stack so it's centered horizontally beneath the
+       box. Items are left-aligned inside the (shrunken) ul block, so the
+       whole list reads as a left-aligned column, centered under the box.
+       Visible on every breakpoint (the old display:none@768 is removed).
        ===================================================================== */
 
     .left-nav {
-      position: absolute;
-      top: 50%;
-      left: 3rem;
-      transform: translateY(-50%);
-      z-index: 10;                 /* above box (z:4) and all vine layers */
+      position: relative;
+      z-index: 10;
       list-style: none;
       display: flex;
       flex-direction: column;
       gap: 0.6rem;
+      width: max-content;          /* shrink to widest item — centers as a block */
+      padding-left: 1rem;          /* room for the [ bracket hover so it doesn't clip */
+      padding-right: 1rem;
     }
 
     .left-nav a {
@@ -785,8 +807,11 @@
       to   { background-position: 0 200%; }
     }
 
-    @media (max-width: 768px) {
-      .left-nav { display: none; }
+    /* Mobile font + spacing tweaks for the nav under the box.
+       (No display:none — the nav is the primary navigation now.) */
+    @media (max-width: 480px) {
+      .left-nav        { gap: 0.5rem; padding-left: 0.8rem; padding-right: 0.8rem; }
+      .left-nav a      { font-size: 0.85rem; }
     }
 
     /* Hero social row */
@@ -1719,18 +1744,10 @@
          hero section (instead of floating over the shop section below). -->
     <div class="ambient-layer" id="ambientLayer"></div>
 
-    <!-- LEFT-SIDE NAV — floats over the background image, absolutely
-         positioned within the hero. Hidden <=768px (hamburger takes over). -->
-    <ul class="left-nav">
-      <li><a href="#drops">shop</a></li>
-      <li><a href="#">lookbook</a></li>
-      <li><a href="#archive">archive</a></li>
-      <li><a href="#">shipping</a></li>
-      <li><a href="#">contact</a></li>
-      <li><a href="#">retail stores</a></li>
-      <li><a href="#">stickers</a></li>
-    </ul>
-
+    <!-- HERO STACK — wraps the VISÃO box AND the nav list below it so
+         both center together inside the hero. The box renders first; the
+         vertical nav (shop / lookbook / archive / …) renders underneath. -->
+    <div class="hero-stack">
     <div class="hero-box">
       <div class="logo">VIS<span class="tilde">Ã</span>O</div>
       <div class="hero-box-tag">embroidered. limited.</div>
@@ -1853,6 +1870,20 @@
         <a href="https://tiktok.com/@visao" target="_blank" rel="noopener">TT</a>
         <a href="https://youtube.com/@vi3ion" target="_blank" rel="noopener">YT</a>
       </div>
+    </div>
+
+    <!-- Vertical nav list under the box. Items are left-aligned inside
+         a max-content ul, so the whole block centers horizontally under
+         the box (matching the user's reference mock-up). -->
+    <ul class="left-nav">
+      <li><a href="#drops">shop</a></li>
+      <li><a href="#">lookbook</a></li>
+      <li><a href="#archive">archive</a></li>
+      <li><a href="#">shipping</a></li>
+      <li><a href="#">contact</a></li>
+      <li><a href="#">retail stores</a></li>
+      <li><a href="#">stickers</a></li>
+    </ul>
     </div>
   </section>
 
