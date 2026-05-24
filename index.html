@@ -296,12 +296,24 @@
       position: relative;
       padding: var(--s-6) var(--gutter);
       overflow: hidden;
+      /* City background lives ON the hero itself (not on a child element)
+         so it covers the FULL hero including padding — no black bars at
+         the top/bottom from padding showing through. Gradient overlay
+         listed first → it renders above the image. */
+      background-image:
+        linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.4) 0%,
+          rgba(0, 0, 0, 0.2) 50%,
+          rgba(0, 0, 0, 0.5) 100%),
+        url('images/hero-sakura.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
     }
 
-    /* Real hero image + a subtle dark gradient overlay layered on top, so the
-       centered VISÃO box keeps enough contrast against the artwork.
-       The gradient is listed first → it renders above the image. */
+    /* Legacy .hero-bg rule kept as no-op (the matching <div> is removed). */
     .hero-bg {
+      display: none;
       position: absolute;
       inset: 0;
       background-image:
@@ -1793,21 +1805,17 @@
     </defs>
   </svg>
 
-  <!-- =======================================================================
-       MOBILE HAMBURGER — only visible <= 768px. Opens the mobile menu.
-       ======================================================================= -->
-  <button class="hamburger" onclick="toggleMobileMenu()" aria-label="Open menu">
-    <span></span><span></span><span></span>
-  </button>
+  <!-- HAMBURGER intentionally NOT rendered on the homepage. The vertical
+       nav under the box is the primary navigation here; the hamburger
+       only appears on the sub-pages as a quick way to jump between them. -->
 
   <!-- =======================================================================
        1 · HERO — illustrated background + contained nav box.
        The contained box IS the navigation on the homepage.
-       Replace .hero-bg with real anime cityscape art when you have it.
+       Background image lives on .hero itself (not a child div) so it
+       covers the full hero including padding — no black bars.
        ======================================================================= -->
   <section class="hero">
-    <div class="hero-bg"></div>
-
     <!-- AMBIENT LAYER — falling-leaf clones and ambient drifters live here.
          Absolutely positioned inside .hero so drifters stay scoped to the
          hero section (instead of floating over the shop section below). -->
