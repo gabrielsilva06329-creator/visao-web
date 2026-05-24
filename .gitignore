@@ -6,3 +6,7 @@ node_modules/
 
 # Claude Code harness files (added by Claude — not project source)
 skills/
+
+# Personal business tracker — not part of the website
+VISAO-tracker.xlsx
+build_tracker.py
