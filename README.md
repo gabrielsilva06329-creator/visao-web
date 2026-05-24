@@ -1,6 +1,6 @@
 # VISÃO — Build Guide
 
-This is the build guide for `visao.html`. Drop this file in the same folder as the HTML so you (and Claude Code) can reference it.
+This is the build guide for `index.html`. Drop this file in the same folder as the HTML so you (and Claude Code) can reference it.
 
 ---
 
@@ -28,15 +28,15 @@ All animations work. All buttons work. Cart drawer functions. Mobile nav functio
 
 1. Install **VS Code** if you haven't
 2. Install the **Live Server** extension (search "Live Server" by Ritwick Dey)
-3. Open the folder containing `visao.html` in VS Code
-4. Right-click `visao.html` → "Open with Live Server"
+3. Open the folder containing `index.html` in VS Code
+4. Right-click `index.html` → "Open with Live Server"
 5. Site opens at `localhost:5500` — every save auto-refreshes the browser
 
 ---
 
 ## Adding a new product
 
-In `visao.html`, find the `LATEST DROP` section. Each product is one `<article class="product-card">` block.
+In `index.html`, find the `LATEST DROP` section. Each product is one `<article class="product-card">` block.
 
 **To add a 4th product:**
 
@@ -71,7 +71,7 @@ In `visao.html`, find the `LATEST DROP` section. Each product is one `<article c
 
 For now, all products go on the homepage `#drops` section. When you ship multiple drops, structure it like this:
 
-1. Duplicate `visao.html` → rename `drop-001-sakura.html`
+1. Duplicate `index.html` → rename `drop-001-sakura.html`
 2. Strip out everything except nav + drop section + footer
 3. Update product cards for that drop's pieces
 4. Link to it from the Archive section on the homepage
@@ -100,7 +100,7 @@ Or — simpler — keep adding sections to the homepage with different ids (`#dr
    node: document.getElementById('product-component-XXXXX'),
    ```
 7. Change `'product-component-XXXXX'` to match your slot: e.g. `'buy-button-sakura-hoodie'`
-8. Open `visao.html` and find the comment `===== 5. SHOPIFY BUY BUTTON INIT =====`
+8. Open `index.html` and find the comment `===== 5. SHOPIFY BUY BUTTON INIT =====`
 9. Uncomment the example block and replace with your real Shopify code
 10. Save. Test. The "Reserve · Pre-order" button is now a real Shopify checkout.
 
@@ -114,42 +114,42 @@ Open the folder in VS Code, open Claude Code, then paste any of these:
 
 ### Brand/copy tweaks
 ```
-In visao.html, change the hero tagline to "[new tagline]". Keep the styling.
+In index.html, change the hero tagline to "[new tagline]". Keep the styling.
 ```
 ```
-In visao.html, update the heritage section copy to mention my grandmother Lourdes by name and her town in Minas Gerais. Keep the structure but write it as if I'm telling the story to a friend.
+In index.html, update the heritage section copy to mention my grandmother Lourdes by name and her town in Minas Gerais. Keep the structure but write it as if I'm telling the story to a friend.
 ```
 ```
-In visao.html, change the craftsmanship stats. Replace "80k+ stitches per piece" with [new stat] and label it [new label]. Do the same for the other two stats.
+In index.html, change the craftsmanship stats. Replace "80k+ stitches per piece" with [new stat] and label it [new label]. Do the same for the other two stats.
 ```
 
 ### Adding products
 ```
-In visao.html, in the .product-grid section, add three new product cards after the existing three. Use unique data-product-id and buy-button-slot ids for each. Name them: [Name 1], [Name 2], [Name 3]. Use the existing card template.
+In index.html, in the .product-grid section, add three new product cards after the existing three. Use unique data-product-id and buy-button-slot ids for each. Name them: [Name 1], [Name 2], [Name 3]. Use the existing card template.
 ```
 
 ### Visual tweaks
 ```
-In visao.html, change the accent gold color from #c9a961 to [new hex]. Update both --accent-gold and --accent-gold-dim variables.
+In index.html, change the accent gold color from #c9a961 to [new hex]. Update both --accent-gold and --accent-gold-dim variables.
 ```
 ```
-In visao.html, replace the hero-bg gradient placeholder with a real image. Use this URL: [image URL]. Add background-size: cover and background-position: center.
+In index.html, replace the hero-bg gradient placeholder with a real image. Use this URL: [image URL]. Add background-size: cover and background-position: center.
 ```
 ```
-In visao.html, make the product card images load from a /images folder. Each card should use a background-image of /images/[product-id].jpg matching the data-product-id.
+In index.html, make the product card images load from a /images folder. Each card should use a background-image of /images/[product-id].jpg matching the data-product-id.
 ```
 
 ### New sections
 ```
-In visao.html, add a new section between Craftsmanship and Heritage called "Press" — three columns of magazine/blog quotes about VISÃO. Style it like the rest of the site.
+In index.html, add a new section between Craftsmanship and Heritage called "Press" — three columns of magazine/blog quotes about VISÃO. Style it like the rest of the site.
 ```
 ```
-In visao.html, add a sticky countdown timer at the top of the hero that counts down to the drop launch. Use vanilla JavaScript, no libraries.
+In index.html, add a sticky countdown timer at the top of the hero that counts down to the drop launch. Use vanilla JavaScript, no libraries.
 ```
 
 ### Switching brand modes per drop
 ```
-In visao.html, create a "Brazil capsule" variant where the announcement bar, hero deco, and primary accent shift from gold to the emerald/terracotta brazil palette I defined in :root. Make it a CSS class I can add to <body> to toggle.
+In index.html, create a "Brazil capsule" variant where the announcement bar, hero deco, and primary accent shift from gold to the emerald/terracotta brazil palette I defined in :root. Make it a CSS class I can add to <body> to toggle.
 ```
 
 ---
@@ -174,7 +174,7 @@ Alternative hosts that work the same way: Vercel, Netlify.
 
 ```
 /visao-site
-  /visao.html                ← current single-file build
+  /index.html                ← current single-file build
   /README.md                 ← this file
   /images
     /hero.jpg
