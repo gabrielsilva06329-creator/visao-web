@@ -630,7 +630,7 @@
       .hero            { align-items: flex-start; padding: 1.5rem var(--gutter); }
       .hero-stack      { gap: var(--s-3); }
       .hero-box        { max-width: 280px; padding: 1.1rem; gap: var(--s-2); }
-      .hero-box .logo  { font-size: 1.5rem; }
+      .hero-box .logo  { max-width: 220px; }
       .hero-box-tag    { font-size: 0.58rem; margin-top: -0.4rem; }
       .mascot-wrap     { max-width: 210px; margin: 0 auto 24px; }
       .mascot          { font-size: 0.56rem; padding: 0.7rem; }
@@ -646,7 +646,7 @@
     /* Even narrower phones (≤375px — iPhone SE / Mini) — tighten further */
     @media (max-width: 375px) {
       .hero-box         { max-width: 260px; padding: 0.9rem; }
-      .hero-box .logo   { font-size: 1.35rem; }
+      .hero-box .logo   { max-width: 200px; }
       .mascot-wrap      { max-width: 190px; margin: 0 auto 20px; }
       .side-vines       { width: 36px; }
       .side-vines.left  { left: -36px; }
@@ -662,7 +662,7 @@
       .hero            { padding: 0.75rem var(--gutter); }
       .hero-stack      { gap: var(--s-2); }
       .hero-box        { padding: 0.85rem; gap: 0.65rem; }
-      .hero-box .logo  { font-size: 1.35rem; }
+      .hero-box .logo  { max-width: 200px; }
       .mascot-wrap     { max-width: 175px; margin: 0 auto 14px; }
       .hero-email-form input  { padding: 0.5rem 0.55rem; font-size: 0.66rem; }
       .hero-email-form button { padding: 0.5rem 0.7rem; }
@@ -674,7 +674,7 @@
     /* VERY short viewports — iPhone SE landscape, small Androids */
     @media (max-height: 680px) and (max-width: 480px) {
       .mascot-wrap     { max-width: 150px; margin: 0 auto 10px; }
-      .hero-box .logo  { font-size: 1.2rem; }
+      .hero-box .logo  { max-width: 180px; }
       .hero-box-tag    { font-size: 0.55rem; }
       .left-nav        { gap: 0.32rem; }
       .left-nav a      { font-size: 0.88rem; }
@@ -685,11 +685,27 @@
       to { opacity: 1; }
     }
 
+    /* Custom collage-style VISÃO logo image. Replaces the text logo on
+       the homepage. Subtle ambient drop-shadow always present; on hover
+       the shadow intensifies to a soft pink (sakura accent) and the
+       logo scales up 4%. */
     .hero-box .logo {
       position: relative;
-      z-index: 5;                  /* above wrap-vines spillover */
-      font-size: 2rem;
-      line-height: 1;
+      z-index: 5;
+      display: block;
+      width: 100%;
+      max-width: 260px;
+      height: auto;
+      margin: 0 auto;
+      transition: transform 0.4s var(--ease-out), filter 0.4s var(--ease-out);
+      filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5));
+      cursor: default;
+    }
+    .hero-box .logo:hover {
+      transform: scale(1.04);
+      filter:
+        drop-shadow(0 2px 8px rgba(0, 0, 0, 0.5))
+        drop-shadow(0 0 16px rgba(244, 184, 200, 0.45));
     }
 
     .hero-box-tag {
@@ -1826,7 +1842,7 @@
          vertical nav (shop / lookbook / archive / …) renders underneath. -->
     <div class="hero-stack">
     <div class="hero-box">
-      <div class="logo">VIS<span class="tilde">Ã</span>O</div>
+      <img src="/images/visao-logo.png" alt="VISÃO" class="logo">
       <div class="hero-box-tag">embroidered. limited.</div>
 
       <!-- LEFT side branch — Brazilian-Amazon style.
