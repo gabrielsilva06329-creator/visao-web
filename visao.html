@@ -394,17 +394,22 @@
        bottom:180). 25px protrusion on each side; .hero-box has no overflow
        clip so they're fully visible. z:2 sits above the TV static (z:-1)
        and below the z:5 wordmark / mascot / email / socials. */
+    /* Side branches — STRAIGHT DOWN from the OUTER hero-box's top corners,
+       hugging the OUTSIDE of the left/right edges. LEFT = Brazilian-Amazon
+       brown branch with abundant deep-green leaves. RIGHT = Japanese
+       cherry branch with green leaves + pink blossoms. SVG spans the full
+       card height; trunk root in viewBox coords lands exactly on the
+       hero box's top-left / top-right corner. */
     .side-vines {
       position: absolute;
-      top: 80px;                   /* near top of box, just below tagline */
-      bottom: 80px;                /* near bottom of box, just above socials */
-      width: 80px;
-      height: auto;
+      top: 0;                      /* aligns with the top edge of the card */
+      height: 100%;                /* drapes the full card height */
+      width: 60px;                 /* narrow band running down the outside */
       pointer-events: none;
       z-index: 2;
     }
-    .side-vines.left  { left: -25px; }
-    .side-vines.right { right: -25px; }
+    .side-vines.left  { left: -60px; }     /* right edge of SVG sits on box's LEFT edge */
+    .side-vines.right { right: -60px; }    /* left edge of SVG sits on box's RIGHT edge */
 
     /* Mascot wrap — square 280-max container with overflow:visible so the
        wreath can extend OUTSIDE the mascot's perimeter. */
@@ -469,14 +474,40 @@
     /* === Continuous gentle sway — added by JS via .swaying class after the
        initial 4s grow-in. opacity:1 + explicit scale(1) in both keyframes
        keeps the leaf fully visible at full size while it rocks. `alternate`
-       avoids the jump back to start that comes with a non-alternating loop. */
+       avoids the jump back to start that comes with a non-alternating loop.
+       Each element's --sway-dur, --sway-amp and animation-delay are
+       randomized per-instance by JS (see scheduleSway in section 6) so
+       no two leaves move in sync. */
     .leaf.swaying, .blossom.swaying {
       opacity: 1;
       animation: leaf-sway var(--sway-dur, 3.5s) ease-in-out infinite alternate;
     }
+    /* Sway = small side-to-side translateX (--sway-drift) paired with a
+       rotate (--sway-amp). The translate makes it feel like the leaf is
+       hanging from a stem that's moving, not just spinning in place. */
     @keyframes leaf-sway {
-      from { transform: scale(1) rotate(calc(var(--sway-amp, 7deg) * -1)); }
-      to   { transform: scale(1) rotate(var(--sway-amp, 7deg)); }
+      from { transform: translateX(calc(var(--sway-drift, 2px) * -1)) scale(1) rotate(calc(var(--sway-amp, 7deg) * -1)); }
+      to   { transform: translateX(var(--sway-drift, 2px)) scale(1) rotate(var(--sway-amp, 7deg)); }
+    }
+
+    /* === Wind gust — applied by JS in localized clusters every 5–12s.
+       Stronger swing than the base sway, then decays back to neutral.
+       Overrides .swaying via !important so a gusting element doesn't
+       fight two animations at once. Released by JS after 1.8s; sway
+       resumes immediately (small visual snap is masked by the gust's
+       last 0-deg keyframe). */
+    .leaf.gusting, .blossom.gusting {
+      animation: leaf-gust 1.8s cubic-bezier(0.4, 0.0, 0.2, 1) forwards !important;
+    }
+    @keyframes leaf-gust {
+      0%   { transform: scale(1)    rotate(0deg); }
+      12%  { transform: scale(1.06) rotate(-26deg); }
+      28%  { transform: scale(1.04) rotate(-14deg); }
+      44%  { transform: scale(1.03) rotate(16deg); }
+      60%  { transform: scale(1.02) rotate(-10deg); }
+      76%  { transform: scale(1.01) rotate(6deg); }
+      90%  { transform: scale(1)    rotate(-2deg); }
+      100% { transform: scale(1)    rotate(0deg); }
     }
 
     /* === Detach wobble — accelerating shake. No opacity change; the JS
@@ -1597,33 +1628,73 @@
         <path d="M 13 0 Q 16 -2.5 19 -5" stroke="#2a3f18" stroke-width="0.35" fill="none" opacity="0.6"/>
         <path d="M 15 0 Q 18 2.5 21 5" stroke="#2a3f18" stroke-width="0.35" fill="none" opacity="0.6"/>
       </symbol>
-      <symbol id="sakura" viewBox="-15 -15 30 30">
-        <g><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.25" opacity="0.95"/></g>
-        <g transform="rotate(72)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.25" opacity="0.95"/></g>
-        <g transform="rotate(144)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.25" opacity="0.95"/></g>
-        <g transform="rotate(216)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.25" opacity="0.95"/></g>
-        <g transform="rotate(288)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.25" opacity="0.95"/></g>
-        <circle cx="0" cy="0" r="2" fill="#fff4a8"/>
-        <circle cx="0" cy="-2.5" r="0.6" fill="#d4a017"/><circle cx="2.4" cy="-0.8" r="0.6" fill="#d4a017"/>
-        <circle cx="1.5" cy="2" r="0.6" fill="#d4a017"/><circle cx="-1.5" cy="2" r="0.6" fill="#d4a017"/>
-        <circle cx="-2.4" cy="-0.8" r="0.6" fill="#d4a017"/><circle cx="0" cy="0" r="0.8" fill="#e88c00"/>
+      <!-- CHERRY BLOSSOM (full open flower) — matches the photographic
+           reference: 5 broad overlapping petals with a small notch at each
+           tip, a darker pink inner ring at the base of the petals, 12
+           stamen filaments radiating outward, yellow-orange tipped anthers
+           at the end of each filament, and a tiny bright center. -->
+      <symbol id="sakura" viewBox="-14 -14 28 28">
+        <g><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.15" opacity="0.92"/></g>
+        <g transform="rotate(72)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.15" opacity="0.92"/></g>
+        <g transform="rotate(144)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.15" opacity="0.92"/></g>
+        <g transform="rotate(216)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.15" opacity="0.92"/></g>
+        <g transform="rotate(288)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.15" opacity="0.92"/></g>
+        <circle cx="0" cy="0" r="2.2" fill="#d97a8e" opacity="0.6"/>
+        <g stroke="#c49050" stroke-width="0.28" opacity="0.9" stroke-linecap="round">
+          <line x1="0" y1="0" x2="0" y2="-3.6"/><line x1="0" y1="0" x2="1.8" y2="-3.12"/><line x1="0" y1="0" x2="3.12" y2="-1.8"/><line x1="0" y1="0" x2="3.6" y2="0"/>
+          <line x1="0" y1="0" x2="3.12" y2="1.8"/><line x1="0" y1="0" x2="1.8" y2="3.12"/><line x1="0" y1="0" x2="0" y2="3.6"/><line x1="0" y1="0" x2="-1.8" y2="3.12"/>
+          <line x1="0" y1="0" x2="-3.12" y2="1.8"/><line x1="0" y1="0" x2="-3.6" y2="0"/><line x1="0" y1="0" x2="-3.12" y2="-1.8"/><line x1="0" y1="0" x2="-1.8" y2="-3.12"/>
+        </g>
+        <g fill="#e8a020">
+          <circle cx="0" cy="-3.6" r="0.5"/><circle cx="1.8" cy="-3.12" r="0.5"/><circle cx="3.12" cy="-1.8" r="0.5"/><circle cx="3.6" cy="0" r="0.5"/>
+          <circle cx="3.12" cy="1.8" r="0.5"/><circle cx="1.8" cy="3.12" r="0.5"/><circle cx="0" cy="3.6" r="0.5"/><circle cx="-1.8" cy="3.12" r="0.5"/>
+          <circle cx="-3.12" cy="1.8" r="0.5"/><circle cx="-3.6" cy="0" r="0.5"/><circle cx="-3.12" cy="-1.8" r="0.5"/><circle cx="-1.8" cy="-3.12" r="0.5"/>
+        </g>
+        <circle cx="0" cy="0" r="0.9" fill="#fff5b0"/>
       </symbol>
-      <symbol id="sakuraDeep" viewBox="-15 -15 30 30">
-        <g><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.25"/></g>
-        <g transform="rotate(72)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.25"/></g>
-        <g transform="rotate(144)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.25"/></g>
-        <g transform="rotate(216)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.25"/></g>
-        <g transform="rotate(288)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.25"/></g>
-        <circle cx="0" cy="0" r="2" fill="#fff4a8"/>
-        <circle cx="0" cy="-2.5" r="0.6" fill="#d4a017"/><circle cx="2.4" cy="-0.8" r="0.6" fill="#d4a017"/>
-        <circle cx="1.5" cy="2" r="0.6" fill="#d4a017"/><circle cx="-1.5" cy="2" r="0.6" fill="#d4a017"/>
-        <circle cx="-2.4" cy="-0.8" r="0.6" fill="#d4a017"/><circle cx="0" cy="0" r="0.8" fill="#e88c00"/>
+      <!-- DEEPER PINK variant — same anatomy, more saturated gradient -->
+      <symbol id="sakuraDeep" viewBox="-14 -14 28 28">
+        <g><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.15" opacity="0.95"/></g>
+        <g transform="rotate(72)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.15" opacity="0.95"/></g>
+        <g transform="rotate(144)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.15" opacity="0.95"/></g>
+        <g transform="rotate(216)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.15" opacity="0.95"/></g>
+        <g transform="rotate(288)"><path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z" fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.15" opacity="0.95"/></g>
+        <circle cx="0" cy="0" r="2.2" fill="#a05c70" opacity="0.65"/>
+        <g stroke="#a87030" stroke-width="0.28" opacity="0.9" stroke-linecap="round">
+          <line x1="0" y1="0" x2="0" y2="-3.6"/><line x1="0" y1="0" x2="1.8" y2="-3.12"/><line x1="0" y1="0" x2="3.12" y2="-1.8"/><line x1="0" y1="0" x2="3.6" y2="0"/>
+          <line x1="0" y1="0" x2="3.12" y2="1.8"/><line x1="0" y1="0" x2="1.8" y2="3.12"/><line x1="0" y1="0" x2="0" y2="3.6"/><line x1="0" y1="0" x2="-1.8" y2="3.12"/>
+          <line x1="0" y1="0" x2="-3.12" y2="1.8"/><line x1="0" y1="0" x2="-3.6" y2="0"/><line x1="0" y1="0" x2="-3.12" y2="-1.8"/><line x1="0" y1="0" x2="-1.8" y2="-3.12"/>
+        </g>
+        <g fill="#e89010">
+          <circle cx="0" cy="-3.6" r="0.5"/><circle cx="1.8" cy="-3.12" r="0.5"/><circle cx="3.12" cy="-1.8" r="0.5"/><circle cx="3.6" cy="0" r="0.5"/>
+          <circle cx="3.12" cy="1.8" r="0.5"/><circle cx="1.8" cy="3.12" r="0.5"/><circle cx="0" cy="3.6" r="0.5"/><circle cx="-1.8" cy="3.12" r="0.5"/>
+          <circle cx="-3.12" cy="1.8" r="0.5"/><circle cx="-3.6" cy="0" r="0.5"/><circle cx="-3.12" cy="-1.8" r="0.5"/><circle cx="-1.8" cy="-3.12" r="0.5"/>
+        </g>
+        <circle cx="0" cy="0" r="0.9" fill="#fff5b0"/>
       </symbol>
-      <symbol id="bud" viewBox="-6 -8 12 12">
-        <ellipse cx="0" cy="-2" rx="2.5" ry="4" fill="#e88aa0" stroke="#a05c70" stroke-width="0.3"/>
-        <path d="M -2 -3 Q 0 -1 2 -3" stroke="#a05c70" stroke-width="0.3" fill="none"/>
-        <path d="M 0 1 L 0 3" stroke="#5a8038" stroke-width="0.5"/>
-        <path d="M -1 2 L 1 2" stroke="#5a8038" stroke-width="0.4"/>
+
+      <!-- CLOSED BUD — elongated pink pod, brown stem with sepals at the
+           base. Matches the reference image's bud shape exactly. -->
+      <symbol id="bud" viewBox="-5 -8 10 14">
+        <ellipse cx="0" cy="-3" rx="2.5" ry="4.5" fill="url(#petalGrad)" stroke="#a05c70" stroke-width="0.25"/>
+        <path d="M -2 -3 Q 0 -1 2 -3" stroke="#a05c70" stroke-width="0.2" fill="none" opacity="0.7"/>
+        <path d="M 0 -7 L 0 1" stroke="#a05c70" stroke-width="0.15" opacity="0.35" fill="none"/>
+        <path d="M -2.5 1 Q -3 3 -1 3.2 Z" fill="#5a3a22" opacity="0.85"/>
+        <path d="M 2.5 1 Q 3 3 1 3.2 Z" fill="#5a3a22" opacity="0.85"/>
+        <path d="M 0 1 L 0 5" stroke="#5a3a22" stroke-width="0.65" stroke-linecap="round"/>
+      </symbol>
+
+      <!-- SINGLE LOOSE PETAL — one petal of the new sakura shape used by
+           itself, scattered along the branches. Soft pink, slight vein. -->
+      <symbol id="petal" viewBox="-7 -12 14 12">
+        <path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z"
+              fill="url(#petalGrad)" stroke="#d97a8e" stroke-width="0.2" opacity="0.92"/>
+        <path d="M 0 -2 Q 0 -7, 0 -11" stroke="#d97a8e" stroke-width="0.15" opacity="0.4" fill="none"/>
+      </symbol>
+      <symbol id="petalDeep" viewBox="-7 -12 14 12">
+        <path d="M 0 -1 C -3 -3, -6 -5, -7 -8 Q -7 -11, -3 -12 Q -1 -11.5, 0 -10.5 Q 1 -11.5, 3 -12 Q 7 -11, 7 -8 C 6 -5, 3 -3, 0 -1 Z"
+              fill="url(#petalGradDark)" stroke="#a05c70" stroke-width="0.2" opacity="0.95"/>
+        <path d="M 0 -2 Q 0 -7, 0 -11" stroke="#a05c70" stroke-width="0.15" opacity="0.4" fill="none"/>
       </symbol>
     </defs>
   </svg>
@@ -1664,73 +1735,109 @@
       <div class="logo">VIS<span class="tilde">Ã</span>O</div>
       <div class="hero-box-tag">embroidered. limited.</div>
 
-      <!-- LEFT side vine — green leaves draping a thin middle band of the box. -->
-      <svg class="side-vines left" viewBox="0 0 80 400" preserveAspectRatio="none" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-        <path class="vine-path" d="M 40 0 Q 30 60 45 110 Q 60 160 35 220 Q 15 280 40 340 Q 50 380 40 400" stroke="#5a7d3c" stroke-width="1.5" fill="none" opacity="0.8" style="animation-delay: 0.2s"/>
-        <g class="leaf" style="animation-delay: 0.8s"><ellipse cx="33" cy="25" rx="9" ry="4" fill="#6b9047" transform="rotate(-35 33 25)"/></g>
-        <g class="leaf" style="animation-delay: 1s"><ellipse cx="50" cy="70" rx="8" ry="3.5" fill="#5a8038" transform="rotate(40 50 70)"/></g>
-        <g class="leaf" style="animation-delay: 1.1s"><ellipse cx="30" cy="115" rx="10" ry="4" fill="#7ba455" transform="rotate(-50 30 115)"/></g>
-        <g class="leaf" style="animation-delay: 1.2s"><ellipse cx="55" cy="160" rx="9" ry="4" fill="#6b9047" transform="rotate(30 55 160)"/></g>
-        <g class="leaf" style="animation-delay: 1.3s"><ellipse cx="48" cy="205" rx="11" ry="4" fill="#5a8038" transform="rotate(-20 48 205)"/></g>
-        <g class="leaf" style="animation-delay: 1.4s"><ellipse cx="25" cy="245" rx="9" ry="4" fill="#7ba455" transform="rotate(-60 25 245)"/></g>
-        <g class="leaf" style="animation-delay: 1.5s"><ellipse cx="40" cy="285" rx="8" ry="3.5" fill="#6b9047" transform="rotate(45 40 285)"/></g>
-        <g class="leaf" style="animation-delay: 1.6s"><ellipse cx="20" cy="320" rx="10" ry="4" fill="#5a8038" transform="rotate(-40 20 320)"/></g>
-        <g class="leaf" style="animation-delay: 1.7s"><ellipse cx="45" cy="355" rx="9" ry="4" fill="#7ba455" transform="rotate(50 45 355)"/></g>
-        <g class="leaf" style="animation-delay: 1.8s"><ellipse cx="35" cy="385" rx="8" ry="3.5" fill="#6b9047" transform="rotate(-30 35 385)"/></g>
+      <!-- LEFT side branch — Brazilian-Amazon style.
+           Brown trunk anchors at the box's TOP-LEFT corner (SVG point 60, 0)
+           and drapes STRAIGHT DOWN along the outside of the card's left
+           border. Small outward-reaching sub-branches carry abundant
+           deep-green tropical leaves (#leafDark symbol). viewBox 60×600
+           with xMidYMid meet so leaves render at correct aspect ratio
+           regardless of actual card height. -->
+      <svg class="side-vines left" viewBox="0 0 60 600" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
+        <!-- Main trunk: hugs the card's left edge with gentle wiggles -->
+        <path class="vine-path" d="M 60 0 Q 50 60, 55 120 Q 50 180, 45 240 Q 50 300, 48 360 Q 45 420, 50 480 Q 52 540, 50 600" stroke="#5a3a22" stroke-width="3" fill="none" stroke-linecap="round" style="animation-delay: 0.3s"/>
+        <!-- Outward-reaching sub-branches (to the LEFT, away from the card) -->
+        <path class="vine-path" d="M 55 90 Q 35 95, 20 100" stroke="#5a3a22" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.6s"/>
+        <path class="vine-path" d="M 45 200 Q 25 205, 5 215" stroke="#4a2f1a" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.7s"/>
+        <path class="vine-path" d="M 50 320 Q 30 325, 10 335" stroke="#5a3a22" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.8s"/>
+        <path class="vine-path" d="M 47 440 Q 27 445, 8 455" stroke="#4a2f1a" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.9s"/>
+        <path class="vine-path" d="M 50 550 Q 30 555, 12 565" stroke="#5a3a22" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 1s"/>
+
+        <!-- MIXED FOLIAGE — 25 elements: green leaves (#leafDark, #leaf)
+             interlaced with cherry blossoms (#sakura / #sakuraDeep),
+             single loose petals (#petal), and closed buds (#bud).
+             Varied sizes throughout for organic feel. The RIGHT side has
+             the exact same content mirrored across the SVG. -->
+        <g class="leaf"    style="animation-delay: 1.40s"><use href="#leafDark"   x="-18" y="-9"   width="36" height="18" transform="translate(45, 20) rotate(-45)"/></g>
+        <g class="blossom" style="animation-delay: 1.45s"><use href="#sakura"     x="-14" y="-14" width="28" height="28" transform="translate(35, 45)"/></g>
+        <g class="blossom" style="animation-delay: 1.50s"><use href="#petal"      x="-5"  y="-9"  width="10" height="14" transform="translate(20, 70) rotate(-110)"/></g>
+        <g class="leaf"    style="animation-delay: 1.55s"><use href="#leafDark"   x="-14" y="-7"  width="28" height="14" transform="translate(40, 95) rotate(-100)"/></g>
+        <g class="blossom" style="animation-delay: 1.60s"><use href="#bud"        x="-6"  y="-7"  width="12" height="14" transform="translate(50, 120) rotate(80)"/></g>
+        <g class="blossom" style="animation-delay: 1.65s"><use href="#sakuraDeep" x="-13" y="-13" width="26" height="26" transform="translate(28, 145)"/></g>
+        <g class="leaf"    style="animation-delay: 1.70s"><use href="#leafDark"   x="-11" y="-5.5" width="22" height="11" transform="translate(10, 170) rotate(-120)"/></g>
+        <g class="blossom" style="animation-delay: 1.75s"><use href="#sakura"     x="-11" y="-11" width="22" height="22" transform="translate(48, 195)"/></g>
+        <g class="leaf"    style="animation-delay: 1.80s"><use href="#leafDark"   x="-16" y="-8"  width="32" height="16" transform="translate(32, 220) rotate(80)"/></g>
+        <g class="blossom" style="animation-delay: 1.85s"><use href="#petal"      x="-7"  y="-12" width="14" height="20" transform="translate(18, 245) rotate(-130)"/></g>
+        <g class="blossom" style="animation-delay: 1.90s"><use href="#sakura"     x="-9"  y="-9"  width="18" height="18" transform="translate(50, 270)"/></g>
+        <g class="leaf"    style="animation-delay: 1.95s"><use href="#leafDark"   x="-17" y="-8.5" width="34" height="17" transform="translate(30, 295) rotate(-90)"/></g>
+        <g class="blossom" style="animation-delay: 2.00s"><use href="#sakura"     x="-15" y="-15" width="30" height="30" transform="translate(15, 320)"/></g>
+        <g class="leaf"    style="animation-delay: 2.05s"><use href="#leafDark"   x="-11" y="-5.5" width="22" height="11" transform="translate(45, 345) rotate(85)"/></g>
+        <g class="blossom" style="animation-delay: 2.10s"><use href="#bud"        x="-7"  y="-7"  width="14" height="16" transform="translate(22, 370) rotate(-100)"/></g>
+        <g class="leaf"    style="animation-delay: 2.15s"><use href="#leafDark"   x="-13" y="-6.5" width="26" height="13" transform="translate(50, 395) rotate(75)"/></g>
+        <g class="blossom" style="animation-delay: 2.20s"><use href="#sakura"     x="-13" y="-13" width="26" height="26" transform="translate(33, 420)"/></g>
+        <g class="blossom" style="animation-delay: 2.25s"><use href="#petalDeep"  x="-7"  y="-12" width="14" height="20" transform="translate(10, 445) rotate(-135)"/></g>
+        <g class="leaf"    style="animation-delay: 2.30s"><use href="#leafDark"   x="-12" y="-6"  width="24" height="12" transform="translate(48, 470) rotate(80)"/></g>
+        <g class="blossom" style="animation-delay: 2.35s"><use href="#sakuraDeep" x="-12" y="-12" width="24" height="24" transform="translate(28, 495)"/></g>
+        <g class="blossom" style="animation-delay: 2.40s"><use href="#bud"        x="-6"  y="-7"  width="12" height="14" transform="translate(15, 520) rotate(-120)"/></g>
+        <g class="leaf"    style="animation-delay: 2.45s"><use href="#leafDark"   x="-15" y="-7.5" width="30" height="15" transform="translate(45, 545) rotate(90)"/></g>
+        <g class="blossom" style="animation-delay: 2.50s"><use href="#sakura"     x="-11" y="-11" width="22" height="22" transform="translate(30, 570)"/></g>
+        <g class="leaf"    style="animation-delay: 2.55s"><use href="#leaf"       x="-11" y="-5.5" width="22" height="11" transform="translate(15, 585) rotate(-125)"/></g>
+        <g class="blossom" style="animation-delay: 2.60s"><use href="#petal"      x="-9"  y="-15" width="18" height="26" transform="translate(48, 595) rotate(60)"/></g>
       </svg>
 
-      <!-- RIGHT side vine — pink sakura blossoms on the opposite band. -->
-      <svg class="side-vines right" viewBox="0 0 80 400" preserveAspectRatio="none" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-        <path class="vine-path" d="M 40 0 Q 50 60 35 110 Q 20 160 45 220 Q 65 280 40 340 Q 30 380 40 400" stroke="#7a4a52" stroke-width="1.5" fill="none" opacity="0.8" style="animation-delay: 0.3s"/>
-        <g class="blossom" style="animation-delay: 0.9s"><circle cx="48" cy="30" r="3" fill="#f4b8c8"/><circle cx="52" cy="33" r="2.5" fill="#f5a8bc"/><circle cx="44" cy="33" r="2.5" fill="#f5a8bc"/><circle cx="48" cy="36" r="2.5" fill="#f4b8c8"/><circle cx="48" cy="33" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1s"><circle cx="30" cy="80" r="3" fill="#f4b8c8"/><circle cx="34" cy="83" r="2.5" fill="#f5a8bc"/><circle cx="26" cy="83" r="2.5" fill="#f5a8bc"/><circle cx="30" cy="86" r="2.5" fill="#f4b8c8"/><circle cx="30" cy="83" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.1s"><circle cx="50" cy="130" r="3" fill="#f4b8c8"/><circle cx="54" cy="133" r="2.5" fill="#f5a8bc"/><circle cx="46" cy="133" r="2.5" fill="#f5a8bc"/><circle cx="50" cy="136" r="2.5" fill="#f4b8c8"/><circle cx="50" cy="133" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.2s"><circle cx="35" cy="180" r="3" fill="#f4b8c8"/><circle cx="39" cy="183" r="2.5" fill="#f5a8bc"/><circle cx="31" cy="183" r="2.5" fill="#f5a8bc"/><circle cx="35" cy="186" r="2.5" fill="#f4b8c8"/><circle cx="35" cy="183" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.3s"><circle cx="55" cy="225" r="3" fill="#f4b8c8"/><circle cx="59" cy="228" r="2.5" fill="#f5a8bc"/><circle cx="51" cy="228" r="2.5" fill="#f5a8bc"/><circle cx="55" cy="231" r="2.5" fill="#f4b8c8"/><circle cx="55" cy="228" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.4s"><circle cx="40" cy="280" r="3" fill="#f4b8c8"/><circle cx="44" cy="283" r="2.5" fill="#f5a8bc"/><circle cx="36" cy="283" r="2.5" fill="#f5a8bc"/><circle cx="40" cy="286" r="2.5" fill="#f4b8c8"/><circle cx="40" cy="283" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.5s"><circle cx="58" cy="330" r="3" fill="#f4b8c8"/><circle cx="62" cy="333" r="2.5" fill="#f5a8bc"/><circle cx="54" cy="333" r="2.5" fill="#f5a8bc"/><circle cx="58" cy="336" r="2.5" fill="#f4b8c8"/><circle cx="58" cy="333" r="1.5" fill="#d97a8e"/></g>
-        <g class="blossom" style="animation-delay: 1.6s"><circle cx="30" cy="380" r="3" fill="#f4b8c8"/><circle cx="34" cy="383" r="2.5" fill="#f5a8bc"/><circle cx="26" cy="383" r="2.5" fill="#f5a8bc"/><circle cx="30" cy="386" r="2.5" fill="#f4b8c8"/><circle cx="30" cy="383" r="1.5" fill="#d97a8e"/></g>
+      <!-- RIGHT side branch — Japanese cherry-blossom style.
+           Dark cherry-bark trunk anchors at the box's TOP-RIGHT corner
+           (SVG point 0, 0) and drapes STRAIGHT DOWN along the outside of
+           the card's right border. Sub-branches reach OUTWARD (to the
+           RIGHT, away from the card). Abundant green leaves (#leaf) AND
+           pink blossoms (#sakura / #sakuraDeep). Mirrors the LEFT side. -->
+      <svg class="side-vines right" viewBox="0 0 60 600" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" style="overflow: visible">
+        <!-- Main cherry-bark trunk: hugs the card's right edge with gentle wiggles -->
+        <path class="vine-path" d="M 0 0 Q 10 60, 5 120 Q 10 180, 15 240 Q 10 300, 12 360 Q 15 420, 10 480 Q 8 540, 10 600" stroke="#3a2820" stroke-width="3" fill="none" stroke-linecap="round" style="animation-delay: 0.4s"/>
+        <!-- Outward-reaching sub-branches (to the RIGHT, away from the card) -->
+        <path class="vine-path" d="M 5 90 Q 25 95, 40 100" stroke="#3a2820" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.7s"/>
+        <path class="vine-path" d="M 15 200 Q 35 205, 55 215" stroke="#2a1810" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.8s"/>
+        <path class="vine-path" d="M 10 320 Q 30 325, 50 335" stroke="#3a2820" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 0.9s"/>
+        <path class="vine-path" d="M 13 440 Q 33 445, 52 455" stroke="#2a1810" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 1s"/>
+        <path class="vine-path" d="M 10 550 Q 30 555, 48 565" stroke="#3a2820" stroke-width="1.5" fill="none" stroke-linecap="round" style="animation-delay: 1.1s"/>
+
+        <!-- MIXED FOLIAGE — exact mirror of the LEFT side's 25 elements.
+             Each LEFT (x, y) with rotation R is reflected to (60-x, y) with
+             rotation (180-R) for asymmetric symbols; radially symmetric
+             blossoms (#sakura, #sakuraDeep) keep no rotation. Animation
+             delays match LEFT so the entry sequence is symmetric, and
+             per-element sway randomization (set later by JS) desyncs the
+             two sides as motion settles in. -->
+        <g class="leaf"    style="animation-delay: 1.40s"><use href="#leafDark"   x="-18" y="-9"   width="36" height="18" transform="translate(15, 20) rotate(225)"/></g>
+        <g class="blossom" style="animation-delay: 1.45s"><use href="#sakura"     x="-14" y="-14" width="28" height="28" transform="translate(25, 45)"/></g>
+        <g class="blossom" style="animation-delay: 1.50s"><use href="#petal"      x="-5"  y="-9"  width="10" height="14" transform="translate(40, 70) rotate(290)"/></g>
+        <g class="leaf"    style="animation-delay: 1.55s"><use href="#leafDark"   x="-14" y="-7"  width="28" height="14" transform="translate(20, 95) rotate(280)"/></g>
+        <g class="blossom" style="animation-delay: 1.60s"><use href="#bud"        x="-6"  y="-7"  width="12" height="14" transform="translate(10, 120) rotate(100)"/></g>
+        <g class="blossom" style="animation-delay: 1.65s"><use href="#sakuraDeep" x="-13" y="-13" width="26" height="26" transform="translate(32, 145)"/></g>
+        <g class="leaf"    style="animation-delay: 1.70s"><use href="#leafDark"   x="-11" y="-5.5" width="22" height="11" transform="translate(50, 170) rotate(300)"/></g>
+        <g class="blossom" style="animation-delay: 1.75s"><use href="#sakura"     x="-11" y="-11" width="22" height="22" transform="translate(12, 195)"/></g>
+        <g class="leaf"    style="animation-delay: 1.80s"><use href="#leafDark"   x="-16" y="-8"  width="32" height="16" transform="translate(28, 220) rotate(100)"/></g>
+        <g class="blossom" style="animation-delay: 1.85s"><use href="#petal"      x="-7"  y="-12" width="14" height="20" transform="translate(42, 245) rotate(310)"/></g>
+        <g class="blossom" style="animation-delay: 1.90s"><use href="#sakura"     x="-9"  y="-9"  width="18" height="18" transform="translate(10, 270)"/></g>
+        <g class="leaf"    style="animation-delay: 1.95s"><use href="#leafDark"   x="-17" y="-8.5" width="34" height="17" transform="translate(30, 295) rotate(270)"/></g>
+        <g class="blossom" style="animation-delay: 2.00s"><use href="#sakura"     x="-15" y="-15" width="30" height="30" transform="translate(45, 320)"/></g>
+        <g class="leaf"    style="animation-delay: 2.05s"><use href="#leafDark"   x="-11" y="-5.5" width="22" height="11" transform="translate(15, 345) rotate(95)"/></g>
+        <g class="blossom" style="animation-delay: 2.10s"><use href="#bud"        x="-7"  y="-7"  width="14" height="16" transform="translate(38, 370) rotate(280)"/></g>
+        <g class="leaf"    style="animation-delay: 2.15s"><use href="#leafDark"   x="-13" y="-6.5" width="26" height="13" transform="translate(10, 395) rotate(105)"/></g>
+        <g class="blossom" style="animation-delay: 2.20s"><use href="#sakura"     x="-13" y="-13" width="26" height="26" transform="translate(27, 420)"/></g>
+        <g class="blossom" style="animation-delay: 2.25s"><use href="#petalDeep"  x="-7"  y="-12" width="14" height="20" transform="translate(50, 445) rotate(315)"/></g>
+        <g class="leaf"    style="animation-delay: 2.30s"><use href="#leafDark"   x="-12" y="-6"  width="24" height="12" transform="translate(12, 470) rotate(100)"/></g>
+        <g class="blossom" style="animation-delay: 2.35s"><use href="#sakuraDeep" x="-12" y="-12" width="24" height="24" transform="translate(32, 495)"/></g>
+        <g class="blossom" style="animation-delay: 2.40s"><use href="#bud"        x="-6"  y="-7"  width="12" height="14" transform="translate(45, 520) rotate(300)"/></g>
+        <g class="leaf"    style="animation-delay: 2.45s"><use href="#leafDark"   x="-15" y="-7.5" width="30" height="15" transform="translate(15, 545) rotate(90)"/></g>
+        <g class="blossom" style="animation-delay: 2.50s"><use href="#sakura"     x="-11" y="-11" width="22" height="22" transform="translate(30, 570)"/></g>
+        <g class="leaf"    style="animation-delay: 2.55s"><use href="#leaf"       x="-11" y="-5.5" width="22" height="11" transform="translate(45, 585) rotate(305)"/></g>
+        <g class="blossom" style="animation-delay: 2.60s"><use href="#petal"      x="-9"  y="-15" width="18" height="26" transform="translate(12, 595) rotate(120)"/></g>
       </svg>
 
-      <!-- Mascot wrap — wrap-vines frame the mascot placeholder. -->
+      <!-- Mascot wrap — plain mascot, no wreath. The outer-card side
+           branches handle all the vine decoration on this page. -->
       <div class="mascot-wrap">
         <div class="mascot">MASCOT · pixelated character logo</div>
-        <svg class="wrap-vines" viewBox="0 0 370 370" preserveAspectRatio="xMidYMid meet" width="100%" height="100%" style="overflow: visible" xmlns="http://www.w3.org/2000/svg">
-          <path class="vine-path" d="M 0 100 Q 30 80 60 60 Q 100 30 150 35 Q 200 38 250 50 Q 300 65 340 90 Q 365 110 370 140" stroke="#5a7d3c" stroke-width="2.5" fill="none" style="animation-delay: 2s"/>
-          <path class="vine-path" d="M 370 270 Q 340 285 305 295 Q 250 310 200 320 Q 150 330 100 320 Q 50 310 20 290 Q 0 275 0 250" stroke="#7a4a52" stroke-width="2.5" fill="none" style="animation-delay: 2.2s"/>
-          <path class="vine-path" d="M 250 50 Q 280 70 290 100 Q 295 130 280 155" stroke="#7a4a52" stroke-width="1.8" fill="none" style="animation-delay: 2.5s"/>
-          <path class="vine-path" d="M 100 320 Q 75 295 80 265 Q 85 235 105 215" stroke="#5a7d3c" stroke-width="1.8" fill="none" style="animation-delay: 2.6s"/>
-          <!-- Connector branches reaching outward toward the side vines -->
-          <path class="vine-path" d="M 0 180 Q -15 200 -25 220" stroke="#5a7d3c" stroke-width="2" fill="none" style="animation-delay: 2.4s"/>
-          <path class="vine-path" d="M 370 180 Q 385 160 395 140" stroke="#7a4a52" stroke-width="2" fill="none" style="animation-delay: 2.4s"/>
-
-          <g class="leaf" style="animation-delay: 2.8s"><ellipse cx="40" cy="78" rx="11" ry="4.5" fill="#6b9047" transform="rotate(-20 40 78)"/></g>
-          <g class="leaf" style="animation-delay: 2.9s"><ellipse cx="85" cy="48" rx="10" ry="4" fill="#7ba455" transform="rotate(-10 85 48)"/></g>
-          <g class="leaf" style="animation-delay: 3s"><ellipse cx="140" cy="32" rx="11" ry="4.5" fill="#5a8038" transform="rotate(5 140 32)"/></g>
-          <g class="leaf" style="animation-delay: 3.1s"><ellipse cx="195" cy="38" rx="10" ry="4" fill="#6b9047" transform="rotate(15 195 38)"/></g>
-          <g class="leaf" style="animation-delay: 3.2s"><ellipse cx="100" cy="295" rx="11" ry="4.5" fill="#7ba455" transform="rotate(-15 100 295)"/></g>
-          <g class="leaf" style="animation-delay: 3.3s"><ellipse cx="85" cy="245" rx="10" ry="4" fill="#5a8038" transform="rotate(-70 85 245)"/></g>
-          <g class="leaf" style="animation-delay: 3.4s"><ellipse cx="60" cy="105" rx="9" ry="3.5" fill="#7ba455" transform="rotate(-50 60 105)"/></g>
-          <g class="leaf" style="animation-delay: 3.5s"><ellipse cx="115" cy="50" rx="9" ry="3.5" fill="#5a8038" transform="rotate(-25 115 50)"/></g>
-          <g class="leaf" style="animation-delay: 3.6s"><ellipse cx="170" cy="34" rx="9" ry="3.5" fill="#6b9047" transform="rotate(0 170 34)"/></g>
-          <g class="leaf" style="animation-delay: 3.7s"><ellipse cx="135" cy="310" rx="9" ry="3.5" fill="#7ba455" transform="rotate(-15 135 310)"/></g>
-          <g class="leaf" style="animation-delay: 3.8s"><ellipse cx="175" cy="318" rx="9" ry="3.5" fill="#5a8038" transform="rotate(-5 175 318)"/></g>
-          <!-- Extra leaves for density -->
-          <g class="leaf" style="animation-delay: 3.9s"><ellipse cx="200" cy="30" rx="10" ry="4" fill="#5a8038" transform="rotate(10 200 30)"/></g>
-          <g class="leaf" style="animation-delay: 4s"><ellipse cx="310" cy="200" rx="10" ry="4" fill="#6b9047" transform="rotate(80 310 200)"/></g>
-          <g class="leaf" style="animation-delay: 4.1s"><ellipse cx="60" cy="200" rx="10" ry="4" fill="#7ba455" transform="rotate(-80 60 200)"/></g>
-          <g class="leaf" style="animation-delay: 4.2s"><ellipse cx="240" cy="305" rx="10" ry="4" fill="#5a8038" transform="rotate(-5 240 305)"/></g>
-
-          <g class="blossom" style="animation-delay: 2.9s"><circle cx="285" cy="80" r="3.5" fill="#f4b8c8"/><circle cx="289" cy="84" r="3" fill="#f5a8bc"/><circle cx="281" cy="84" r="3" fill="#f5a8bc"/><circle cx="285" cy="88" r="3" fill="#f4b8c8"/><circle cx="289" cy="78" r="3" fill="#f4b8c8"/><circle cx="285" cy="84" r="2" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 3s"><circle cx="290" cy="125" r="3.5" fill="#f4b8c8"/><circle cx="294" cy="129" r="3" fill="#f5a8bc"/><circle cx="286" cy="129" r="3" fill="#f5a8bc"/><circle cx="290" cy="133" r="3" fill="#f4b8c8"/><circle cx="290" cy="129" r="2" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 3.1s"><circle cx="260" cy="305" r="3.5" fill="#f4b8c8"/><circle cx="264" cy="309" r="3" fill="#f5a8bc"/><circle cx="256" cy="309" r="3" fill="#f5a8bc"/><circle cx="260" cy="313" r="3" fill="#f4b8c8"/><circle cx="260" cy="309" r="2" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 3.2s"><circle cx="210" cy="320" r="3.5" fill="#f4b8c8"/><circle cx="214" cy="324" r="3" fill="#f5a8bc"/><circle cx="206" cy="324" r="3" fill="#f5a8bc"/><circle cx="210" cy="328" r="3" fill="#f4b8c8"/><circle cx="210" cy="324" r="2" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 3.3s"><circle cx="320" cy="105" r="3" fill="#f4b8c8"/><circle cx="323" cy="109" r="2.5" fill="#f5a8bc"/><circle cx="317" cy="109" r="2.5" fill="#f5a8bc"/><circle cx="320" cy="112" r="2.5" fill="#f4b8c8"/><circle cx="320" cy="109" r="1.5" fill="#d97a8e"/></g>
-          <!-- Extra blossoms for density -->
-          <g class="blossom" style="animation-delay: 4s"><circle cx="130" cy="40" r="3" fill="#f4b8c8"/><circle cx="134" cy="43" r="2.5" fill="#f5a8bc"/><circle cx="126" cy="43" r="2.5" fill="#f5a8bc"/><circle cx="130" cy="46" r="2.5" fill="#f4b8c8"/><circle cx="130" cy="43" r="1.5" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 4.1s"><circle cx="50" cy="130" r="3" fill="#f4b8c8"/><circle cx="54" cy="133" r="2.5" fill="#f5a8bc"/><circle cx="46" cy="133" r="2.5" fill="#f5a8bc"/><circle cx="50" cy="136" r="2.5" fill="#f4b8c8"/><circle cx="50" cy="133" r="1.5" fill="#d97a8e"/></g>
-          <g class="blossom" style="animation-delay: 4.2s"><circle cx="185" cy="315" r="3" fill="#f4b8c8"/><circle cx="189" cy="318" r="2.5" fill="#f5a8bc"/><circle cx="181" cy="318" r="2.5" fill="#f5a8bc"/><circle cx="185" cy="321" r="2.5" fill="#f4b8c8"/><circle cx="185" cy="318" r="1.5" fill="#d97a8e"/></g>
-        </svg>
       </div>
 
       <div class="hero-email-wrap">
@@ -2254,14 +2361,20 @@
 
       // === Sway start — at 4s (after the whirlwind leaf-pop grow-in has
       // completed for every element), add .swaying to every leaf and blossom.
-      // Each gets a randomized --sway-dur (2.9-4.1s), --sway-amp (6-9deg),
-      // and a negative animation-delay so they're at independent phases.
+      // Wide randomization so no two elements move in sync, AND the sway
+      // now includes a small horizontal translate (--sway-drift) so it
+      // reads as "hanging from a moving stem" instead of "spinning in place".
+      //   --sway-dur:   2.0–6.0s   (fast + slow coexist)
+      //   --sway-amp:   4–15deg    (calm + dramatic coexist)
+      //   --sway-drift: 1–5px      (subtle side-to-side translate)
+      //   animation-delay: -5 to 0s (wide phase spread)
       setTimeout(() => {
         animatedElements.forEach(el => {
           if (el.classList.contains('swaying')) return;
-          el.style.setProperty('--sway-dur', (2.9 + Math.random() * 1.2) + 's');
-          el.style.setProperty('--sway-amp', (6 + Math.random() * 3) + 'deg');
-          el.style.animationDelay = (-Math.random() * 3) + 's';
+          el.style.setProperty('--sway-dur', (2 + Math.random() * 4) + 's');
+          el.style.setProperty('--sway-amp', (4 + Math.random() * 11) + 'deg');
+          el.style.setProperty('--sway-drift', (1 + Math.random() * 4) + 'px');
+          el.style.animationDelay = (-Math.random() * 5) + 's';
           el.classList.add('swaying');
         });
       }, 4000);
@@ -2346,6 +2459,54 @@
         }, delay);
       }
       setTimeout(scheduleDetach, 5500);
+
+      // === Wind GUSTS — every 5-12s, pick a random element as the gust
+      // epicenter and apply .gusting to every leaf/blossom within 220px
+      // screen distance. Onset is staggered by distance (≈2ms per pixel,
+      // ~500 px/s ripple) so the gust looks like a wave of wind sweeping
+      // through the foliage instead of a synchronized twitch. The .gusting
+      // class (CSS) runs leaf-gust for 1.8s; we strip it after exactly
+      // 1.8s and the element falls back into its normal sway.
+      function triggerGust() {
+        const candidates = Array.from(animatedElements).filter(el =>
+          !el.classList.contains('leaf-gone') &&
+          !el.classList.contains('leaf-detaching') &&
+          !el.classList.contains('leaf-respawning') &&
+          !el.classList.contains('gusting')
+        );
+        if (candidates.length === 0) return;
+
+        // Pick a random epicenter element
+        const center = candidates[Math.floor(Math.random() * candidates.length)];
+        const cr = center.getBoundingClientRect();
+        if (cr.width === 0) return;
+        const cx = cr.left + cr.width / 2;
+        const cy = cr.top + cr.height / 2;
+
+        // Find everyone within 220px, ripple staggered outward
+        candidates.forEach(el => {
+          const r = el.getBoundingClientRect();
+          if (r.width === 0) return;
+          const dx = (r.left + r.width / 2) - cx;
+          const dy = (r.top + r.height / 2) - cy;
+          const dist = Math.hypot(dx, dy);
+          if (dist > 220) return;
+
+          setTimeout(() => {
+            if (el.classList.contains('leaf-detaching')) return;
+            el.classList.add('gusting');
+            setTimeout(() => el.classList.remove('gusting'), 1800);
+          }, dist * 2);
+        });
+      }
+      function scheduleGust() {
+        const delay = 5000 + Math.random() * 7000;     // every 5-12s
+        setTimeout(() => {
+          triggerGust();
+          scheduleGust();
+        }, delay);
+      }
+      setTimeout(scheduleGust, 6000);
 
       // === Ambient drifters — gentle persistent rain across the hero.
       // Spawned every 0.8-2s, ~8-15 visible at any moment. 60% sakura,

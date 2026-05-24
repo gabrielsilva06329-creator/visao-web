@@ -1,10 +1,8 @@
-# Local Claude Code skill files (not project source)
-skills/
-
-# OS junk
-Thumbs.db
+node_modules/
 .DS_Store
+*.log
+.env
+.vscode/
 
-# Editor temp
-*.swp
-*~
+# Claude Code harness files (added by Claude — not project source)
+skills/
