@@ -649,7 +649,6 @@
       .hero-box .logo  { max-width: 160px; max-height: 80px; }
       .hero-box-tag    { font-size: 0.58rem; margin-top: -0.4rem; }
       .mascot-wrap     { max-width: 210px; margin: 0 auto 24px; }
-      .mascot:hover    { transform: scale(1.15); }   /* gentler hover on phones */
       .hero-email-form input  { font-size: 0.7rem; padding: 0.55rem 0.6rem; }
       .hero-email-form button { padding: 0.55rem 0.8rem; }
       .hero-social svg { width: 1.1rem; height: 1.1rem; }
@@ -774,9 +773,13 @@
       margin-top: -0.6rem;
     }
 
-    /* Mascot = embroidered patch art by sister. Sits in the mascot-wrap
-       square. Hover lifts it (1.25× scale + soft pink glow) for a tactile
-       feel. No click interaction — purely visual. */
+    /* Mascot = embroidered patch art by sister. Hover lifts it (1.25× scale
+       + soft pink glow) for a tactile feel on cursor devices. The hover
+       rule is wrapped in @media (hover: hover) so it ONLY applies to
+       desktops/laptops with a real mouse — touch devices (iPhone, iPad,
+       Android) skip it entirely. Otherwise on touch, the first tap would
+       trigger :hover and the scaled state would get stuck (no "mouse off"
+       event exists on touch). */
     .mascot {
       width: 100%;
       height: 100%;
@@ -791,16 +794,18 @@
         box-shadow 0.45s ease,
         z-index 0s linear 0.45s;
     }
-    .mascot:hover {
-      transform: scale(1.25);
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.6),
-        0 0 24px rgba(244, 184, 200, 0.35);
-      z-index: 20;
-      transition:
-        transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
-        box-shadow 0.45s ease,
-        z-index 0s linear 0s;
+    @media (hover: hover) and (pointer: fine) {
+      .mascot:hover {
+        transform: scale(1.25);
+        box-shadow:
+          0 10px 30px rgba(0, 0, 0, 0.6),
+          0 0 24px rgba(244, 184, 200, 0.35);
+        z-index: 20;
+        transition:
+          transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
+          box-shadow 0.45s ease,
+          z-index 0s linear 0s;
+      }
     }
 
     /* Hero email signup row */
