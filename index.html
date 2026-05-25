@@ -635,7 +635,7 @@
       .hero-box .logo  { max-width: 160px; max-height: 80px; }
       .hero-box-tag    { font-size: 0.58rem; margin-top: -0.4rem; }
       .mascot-wrap     { max-width: 210px; margin: 0 auto 24px; }
-      .mascot          { font-size: 0.56rem; padding: 0.7rem; }
+      .mascot:hover    { transform: scale(1.15); }   /* gentler hover on phones */
       .hero-email-form input  { font-size: 0.7rem; padding: 0.55rem 0.6rem; }
       .hero-email-form button { padding: 0.55rem 0.8rem; }
       .hero-social a   { font-size: 0.66rem; }
@@ -755,21 +755,76 @@
       margin-top: -0.6rem;
     }
 
+    /* Mascot = embroidered patch art by sister. Sits in the mascot-wrap
+       square. Hover lifts it (1.25× scale + soft pink glow) so users
+       sense it's interactive. Click opens the lightbox below at full
+       resolution so the lens-reflection detail (the figures, the kanji)
+       can actually be read. */
     .mascot {
       width: 100%;
       height: 100%;
       border: 1px solid #ffffff;
       background: var(--bg-primary);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.62rem;
-      letter-spacing: 0.04em;
-      padding: 1rem;
+      display: block;
+      object-fit: cover;
       position: relative;
-      z-index: 1;                  /* BEHIND wrap-vines (z:3) — the wreath wraps in front */
+      z-index: 1;
+      cursor: zoom-in;
+      transition:
+        transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
+        box-shadow 0.45s ease,
+        z-index 0s linear 0.45s;
+    }
+    .mascot:hover {
+      transform: scale(1.25);
+      box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.6),
+        0 0 24px rgba(244, 184, 200, 0.35);
+      z-index: 20;                                 /* lift above vines + side nav */
+      transition:
+        transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
+        box-shadow 0.45s ease,
+        z-index 0s linear 0s;
+    }
+
+    /* Mascot lightbox — opens when the mascot is clicked. Full-screen
+       darkened overlay shows the patch at max viewport size with the
+       lens-reflection detail finally readable. */
+    .mascot-lightbox {
+      position: fixed; inset: 0; z-index: 9999;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      display: flex; align-items: center; justify-content: center;
+      padding: 2rem;
+      opacity: 0; visibility: hidden; pointer-events: none;
+      cursor: zoom-out;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .mascot-lightbox.open {
+      opacity: 1; visibility: visible; pointer-events: auto;
+    }
+    .mascot-lightbox img {
+      max-width: min(92vw, 1000px);
+      max-height: 90vh;
+      object-fit: contain;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+      cursor: default;
+    }
+    .mascot-lightbox-close {
+      position: absolute; top: 1.5rem; right: 2rem;
+      background: none; border: none; cursor: pointer;
+      font-size: 2.5rem; color: var(--text-secondary);
+      line-height: 1; padding: 0.5rem; font-family: inherit;
+      transition: color 0.2s ease, transform 0.2s ease;
+    }
+    .mascot-lightbox-close:hover {
+      color: var(--accent-gold);
+      transform: scale(1.1);
+    }
+    @media (max-width: 480px) {
+      .mascot-lightbox { padding: 1rem; }
+      .mascot-lightbox-close { top: 1rem; right: 1rem; font-size: 2rem; }
     }
 
     /* Hero email signup row */
@@ -1980,10 +2035,14 @@
         <g class="blossom" style="animation-delay: 2.60s"><use href="#petal"      x="-9"  y="-15" width="18" height="26" transform="translate(12, 595) rotate(120)"/></g>
       </svg>
 
-      <!-- Mascot wrap — plain mascot, no wreath. The outer-card side
-           branches handle all the vine decoration on this page. -->
+      <!-- Mascot wrap — holds the embroidered-patch mascot art by Gabriel's
+           sister. Click anywhere on the patch opens the full-size lightbox
+           below so the lens-reflection detail can be read at full res. -->
       <div class="mascot-wrap">
-        <div class="mascot">MASCOT · pixelated character logo</div>
+        <img src="/images/mascot.jpg"
+             alt="VISÃO mascot — embroidered patch portrait with figures reflected in the lenses"
+             class="mascot"
+             onclick="openMascotLightbox()">
       </div>
 
       <div class="hero-email-wrap">
@@ -2057,6 +2116,13 @@
     </div>
   </aside>
 
+  <!-- Mascot lightbox — opens when the homepage mascot is clicked so users
+       can read the lens-reflection detail (figures, kanji) at full size. -->
+  <div class="mascot-lightbox" id="mascotLightbox" onclick="closeMascotLightbox()">
+    <button class="mascot-lightbox-close" onclick="event.stopPropagation(); closeMascotLightbox()" aria-label="Close mascot view">×</button>
+    <img src="/images/mascot.jpg" alt="VISÃO mascot — full view" onclick="event.stopPropagation()">
+  </div>
+
   <!-- =======================================================================
        JAVASCRIPT
 
@@ -2101,9 +2167,24 @@
       closeCart();
       closeMobileMenu();
     }
-    // Close on Escape key
+    // ===== Mascot lightbox — open/close the full-size patch view =====
+    function openMascotLightbox() {
+      document.getElementById('mascotLightbox').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeMascotLightbox() {
+      document.getElementById('mascotLightbox').classList.remove('open');
+      // restore body scroll-lock only if no other drawer is open
+      if (!cart.classList.contains('open') && !mobileMenu.classList.contains('open')) {
+        document.body.style.overflow = '';
+      }
+    }
+    // Close drawers AND mascot lightbox on Escape
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') closeAllDrawers();
+      if (e.key === 'Escape') {
+        closeAllDrawers();
+        closeMascotLightbox();
+      }
     });
 
     // ===== 2. NEWSLETTER =====
