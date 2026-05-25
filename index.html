@@ -100,11 +100,17 @@
       overscroll-behavior: none;
       width: 100%;
       height: 100%;
-      /* Same background image on <html> as a safety net for iOS Safari —
-         when the address bar shows/hides and the viewport height changes,
-         any temporary gap below the hero now shows the SAME tapestry
-         instead of solid black. Same gradient overlay so brightness
-         matches the hero. */
+      background-color: var(--bg-primary);
+    }
+
+    /* Hard-cover background — a position:fixed element that ALWAYS covers
+       the entire visible viewport on every iOS Safari state (chrome shown,
+       chrome hidden, transitioning). Bypasses every viewport-units edge
+       case that caused black bars at the top/bottom on iPhone 12. */
+    .hero-bg-fixed {
+      position: fixed;
+      top: 0; right: 0; bottom: 0; left: 0;
+      z-index: -1;
       background-image:
         linear-gradient(to bottom,
           rgba(0, 0, 0, 0.55) 0%,
@@ -114,7 +120,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
-      background-color: var(--bg-primary);   /* solid fallback while image loads */
+      pointer-events: none;
     }
 
     body {
@@ -302,9 +308,7 @@
 
     .hero {
       min-height: 100vh;          /* fallback */
-      min-height: 100dvh;         /* dynamic viewport — auto-adjusts as Safari
-                                     chrome shows/hides, eliminates the black
-                                     bar at the bottom that 100svh produces */
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -316,22 +320,7 @@
       padding-left:   var(--gutter);
       padding-right:  var(--gutter);
       overflow: hidden;
-      /* Tapestry/embroidered BR×JP fusion scene lives ON .hero itself
-         (not a child element) so it covers the full hero including padding
-         — no black bars at top/bottom from padding showing through. Gradient
-         overlay listed first → it renders above the image. Overlay is
-         slightly stronger than for the previous cyberpunk image because
-         this one is sunlit + brighter — needs more darkening for the
-         white VISÃO box to stay readable. */
-      background-image:
-        linear-gradient(to bottom,
-          rgba(0, 0, 0, 0.55) 0%,
-          rgba(0, 0, 0, 0.35) 50%,
-          rgba(0, 0, 0, 0.65) 100%),
-        url('images/background2fix.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background: transparent;    /* .hero-bg-fixed handles the image */
     }
 
     /* Legacy .hero-bg rule kept as no-op (the matching <div> is removed). */
@@ -680,58 +669,43 @@
       .side-vines.right { right: -36px; }
     }
 
-    /* SHORT VIEWPORTS — three tiers of compression for different phone
-       heights. iPhone 12 (~750px visible with Safari chrome) was getting
-       clipped at "retail stores" + "stickers" with previous values.
-       Re-tiered to be MORE aggressive at every level. */
+    /* SHORT VIEWPORTS — re-tiered AFTER discovering iOS Safari reports
+       the LARGE viewport (not small) to @media queries. iPhone 12's
+       large viewport is 844px, so it never matched my old ≤800 rule.
+       Thresholds bumped UP so iPhone 12 (844), iPhone 13/14/15 Pro
+       (852), iPhone 17 Pro (~852) all hit the aggressive rule.
+       iPhone 17 Pro Max (~932) skips compression entirely. */
 
-    /* TIER 1: ≤900px — gentle compression for larger phones (Pro Max,
-       Galaxy Ultra) and 13"+ laptops with browser chrome. Stack still
-       feels comfortable, just tighter. */
-    @media (max-height: 900px) {
+    /* AGGRESSIVE: ≤950px — fires on every iPhone except the largest
+       (Pro Max). also catches 13"-14" laptops with browser chrome. */
+    @media (max-height: 950px) {
       .hero            {
-        padding-top:    max(0.75rem, env(safe-area-inset-top));
-        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        padding-top:    max(0.5rem, env(safe-area-inset-top));
+        padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
       }
-      .hero-stack      { gap: var(--s-2); }
-      .hero-box        { padding: 0.9rem; gap: 0.55rem; }
-      .hero-box .logo  { max-width: 145px; max-height: 70px; margin: -0.5rem auto -0.8rem; }
-      .mascot-wrap     { max-width: 180px; margin: 0 auto 12px; }
-      .hero-email-form input  { padding: 0.5rem 0.55rem; font-size: 0.66rem; }
-      .hero-email-form button { padding: 0.5rem 0.7rem; }
-      .hero-social     { padding-top: 0.6rem; }
-      .hero-social a   { font-size: 0.62rem; }
-      .left-nav        { gap: 0.38rem; }
-      .left-nav a      { font-size: 0.88rem; }
-    }
-
-    /* TIER 2: ≤800px — aggressive. covers iPhone 12 / 13 / 14 / 15 with
-       chrome visible (~750–800 effective viewport). this is the layout
-       most everyday iPhones will hit. */
-    @media (max-height: 800px) {
-      .hero-box        { padding: 0.75rem; gap: 0.45rem; }
-      .hero-box .logo  { max-width: 130px; max-height: 62px; margin: -0.4rem auto -0.7rem; }
-      .mascot-wrap     { max-width: 155px; margin: 0 auto 8px; }
-      .hero-box-tag    { font-size: 0.56rem; }
-      .hero-email-form input  { padding: 0.45rem 0.5rem; font-size: 0.64rem; }
-      .hero-email-form button { padding: 0.45rem 0.65rem; }
+      .hero-stack      { gap: 0.8rem; }
+      .hero-box        { padding: 0.7rem; gap: 0.4rem; }
+      .hero-box .logo  { max-width: 130px; max-height: 60px; margin: -0.5rem auto -0.8rem; }
+      .hero-box-tag    { font-size: 0.55rem; }
+      .mascot-wrap     { max-width: 150px; margin: 0 auto 8px; }
+      .hero-email-form input  { padding: 0.42rem 0.5rem; font-size: 0.62rem; }
+      .hero-email-form button { padding: 0.42rem 0.6rem; }
       .hero-social     { padding-top: 0.5rem; }
       .hero-social a   { font-size: 0.6rem; }
-      .left-nav        { gap: 0.3rem; }
+      .left-nav        { gap: 0.28rem; }
       .left-nav a      { font-size: 0.85rem; }
     }
 
-    /* TIER 3: ≤680px — most aggressive. iPhone SE, iPhone 13 mini,
-       small Androids, very short browser windows. Mascot shrinks to
-       a thumbnail to leave room for all 8 nav items. */
-    @media (max-height: 680px) {
-      .hero-box        { padding: 0.6rem; gap: 0.35rem; }
-      .hero-box .logo  { max-width: 115px; max-height: 55px; }
-      .hero-box-tag    { font-size: 0.5rem; }
-      .mascot-wrap     { max-width: 130px; margin: 0 auto 6px; }
-      .hero-social a   { font-size: 0.56rem; }
-      .left-nav        { gap: 0.24rem; }
-      .left-nav a      { font-size: 0.8rem; }
+    /* MOST AGGRESSIVE: ≤760px — iPhone SE, iPhone Mini, small Androids,
+       very short browser windows. Mascot drops to a thumbnail. */
+    @media (max-height: 760px) {
+      .hero-box        { padding: 0.55rem; gap: 0.3rem; }
+      .hero-box .logo  { max-width: 110px; max-height: 50px; }
+      .hero-box-tag    { font-size: 0.48rem; }
+      .mascot-wrap     { max-width: 120px; margin: 0 auto 5px; }
+      .hero-social a   { font-size: 0.55rem; }
+      .left-nav        { gap: 0.22rem; }
+      .left-nav a      { font-size: 0.78rem; }
     }
 
     /* === TV / LARGE MONITORS (≥1280px wide, generous height) ===
@@ -1803,6 +1777,10 @@
   </style>
 </head>
 <body>
+  <!-- Hard-cover fixed background — always covers the entire iOS viewport
+       including notch + home-indicator safe areas. No seams, no black bars. -->
+  <div class="hero-bg-fixed"></div>
+
 
   <!-- =======================================================================
        LIVING VINE SVG DEFS — gradients + symbols (leaf, leafDark, sakura,
