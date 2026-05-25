@@ -759,10 +759,8 @@
     }
 
     /* Mascot = embroidered patch art by sister. Sits in the mascot-wrap
-       square. Hover lifts it (1.25× scale + soft pink glow) so users
-       sense it's interactive. Click opens the lightbox below at full
-       resolution so the lens-reflection detail (the figures, the kanji)
-       can actually be read. */
+       square. Hover lifts it (1.25× scale + soft pink glow) for a tactile
+       feel. No click interaction — purely visual. */
     .mascot {
       width: 100%;
       height: 100%;
@@ -772,7 +770,6 @@
       object-fit: cover;
       position: relative;
       z-index: 1;
-      cursor: zoom-in;
       transition:
         transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
         box-shadow 0.45s ease,
@@ -783,51 +780,11 @@
       box-shadow:
         0 10px 30px rgba(0, 0, 0, 0.6),
         0 0 24px rgba(244, 184, 200, 0.35);
-      z-index: 20;                                 /* lift above vines + side nav */
+      z-index: 20;
       transition:
         transform 0.45s cubic-bezier(0.34, 1.4, 0.64, 1),
         box-shadow 0.45s ease,
         z-index 0s linear 0s;
-    }
-
-    /* Mascot lightbox — opens when the mascot is clicked. Full-screen
-       darkened overlay shows the patch at max viewport size with the
-       lens-reflection detail finally readable. */
-    .mascot-lightbox {
-      position: fixed; inset: 0; z-index: 9999;
-      background: rgba(0, 0, 0, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: flex; align-items: center; justify-content: center;
-      padding: 2rem;
-      opacity: 0; visibility: hidden; pointer-events: none;
-      cursor: zoom-out;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    .mascot-lightbox.open {
-      opacity: 1; visibility: visible; pointer-events: auto;
-    }
-    .mascot-lightbox img {
-      max-width: min(92vw, 1000px);
-      max-height: 90vh;
-      object-fit: contain;
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-      cursor: default;
-    }
-    .mascot-lightbox-close {
-      position: absolute; top: 1.5rem; right: 2rem;
-      background: none; border: none; cursor: pointer;
-      font-size: 2.5rem; color: var(--text-secondary);
-      line-height: 1; padding: 0.5rem; font-family: inherit;
-      transition: color 0.2s ease, transform 0.2s ease;
-    }
-    .mascot-lightbox-close:hover {
-      color: var(--accent-gold);
-      transform: scale(1.1);
-    }
-    @media (max-width: 480px) {
-      .mascot-lightbox { padding: 1rem; }
-      .mascot-lightbox-close { top: 1rem; right: 1rem; font-size: 2rem; }
     }
 
     /* Hero email signup row */
@@ -2039,13 +1996,11 @@
       </svg>
 
       <!-- Mascot wrap — holds the embroidered-patch mascot art by Gabriel's
-           sister. Click anywhere on the patch opens the full-size lightbox
-           below so the lens-reflection detail can be read at full res. -->
+           sister. Hover-lift only, no click interaction. -->
       <div class="mascot-wrap">
         <img src="/images/mascot.jpg"
              alt="VISÃO mascot — embroidered patch portrait with figures reflected in the lenses"
-             class="mascot"
-             onclick="openMascotLightbox()">
+             class="mascot">
       </div>
 
       <div class="hero-email-wrap">
@@ -2119,13 +2074,6 @@
     </div>
   </aside>
 
-  <!-- Mascot lightbox — opens when the homepage mascot is clicked so users
-       can read the lens-reflection detail (figures, kanji) at full size. -->
-  <div class="mascot-lightbox" id="mascotLightbox" onclick="closeMascotLightbox()">
-    <button class="mascot-lightbox-close" onclick="event.stopPropagation(); closeMascotLightbox()" aria-label="Close mascot view">×</button>
-    <img src="/images/mascot.jpg" alt="VISÃO mascot — full view" onclick="event.stopPropagation()">
-  </div>
-
   <!-- =======================================================================
        JAVASCRIPT
 
@@ -2170,24 +2118,9 @@
       closeCart();
       closeMobileMenu();
     }
-    // ===== Mascot lightbox — open/close the full-size patch view =====
-    function openMascotLightbox() {
-      document.getElementById('mascotLightbox').classList.add('open');
-      document.body.style.overflow = 'hidden';
-    }
-    function closeMascotLightbox() {
-      document.getElementById('mascotLightbox').classList.remove('open');
-      // restore body scroll-lock only if no other drawer is open
-      if (!cart.classList.contains('open') && !mobileMenu.classList.contains('open')) {
-        document.body.style.overflow = '';
-      }
-    }
-    // Close drawers AND mascot lightbox on Escape
+    // Close on Escape key
     document.addEventListener('keydown', e => {
-      if (e.key === 'Escape') {
-        closeAllDrawers();
-        closeMascotLightbox();
-      }
+      if (e.key === 'Escape') closeAllDrawers();
     });
 
     // ===== 2. NEWSLETTER =====
