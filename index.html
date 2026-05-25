@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>VISÃO — embroidered. limited.</title>
   <meta name="description" content="VISÃO. embroidered, not printed. limited drops. Brazilian heritage, Japanese influence.">
 
@@ -95,28 +95,39 @@
 
     html {
       scroll-behavior: smooth;
-      background: var(--bg-primary);
       -webkit-text-size-adjust: 100%;
-      /* Total lock — no scrolling, no bounce, no rubber-band on any axis.
-         The homepage is a single-viewport landing; all other content
-         lives on dedicated /shop, /about, /archive pages. */
       overflow: hidden;
       overscroll-behavior: none;
       width: 100%;
       height: 100%;
+      /* Same background image on <html> as a safety net for iOS Safari —
+         when the address bar shows/hides and the viewport height changes,
+         any temporary gap below the hero now shows the SAME tapestry
+         instead of solid black. Same gradient overlay so brightness
+         matches the hero. */
+      background-image:
+        linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.55) 0%,
+          rgba(0, 0, 0, 0.35) 50%,
+          rgba(0, 0, 0, 0.7) 100%),
+        url('images/background2fix.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: var(--bg-primary);   /* solid fallback while image loads */
     }
 
     body {
-      background: var(--bg-primary);
+      /* Transparent so the html background image shows through wherever
+         the hero doesn't reach (e.g. iOS Safari address-bar gap). */
+      background: transparent;
       color: var(--text-primary);
       font-family: var(--font-body);
       font-weight: 400;
       line-height: 1.6;
       /* Homepage is locked to a single viewport — the hero is everything.
          All other content lives on dedicated /shop, /about, /archive,
-         etc. pages reached via the nav. Nothing below the hero to scroll
-         to, so we lock scroll entirely (both axes). Mobile media queries
-         shrink the hero stack to fit on each phone size. */
+         etc. pages reached via the nav. */
       overflow: hidden;
       overscroll-behavior: none;
       width: 100%;
@@ -290,13 +301,20 @@
        ======================================================================= */
 
     .hero {
-      min-height: 100vh;          /* fallback for old browsers */
-      min-height: 100svh;         /* small viewport — excludes mobile chrome */
+      min-height: 100vh;          /* fallback */
+      min-height: 100dvh;         /* dynamic viewport — auto-adjusts as Safari
+                                     chrome shows/hides, eliminates the black
+                                     bar at the bottom that 100svh produces */
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
-      padding: var(--s-6) var(--gutter);
+      /* Padding respects iOS safe-area insets so the box + nav don't sit
+         behind the notch (top) or home indicator (bottom). */
+      padding-top:    max(var(--s-6), env(safe-area-inset-top));
+      padding-bottom: max(var(--s-6), env(safe-area-inset-bottom));
+      padding-left:   var(--gutter);
+      padding-right:  var(--gutter);
       overflow: hidden;
       /* Tapestry/embroidered BR×JP fusion scene lives ON .hero itself
          (not a child element) so it covers the full hero including padding
@@ -632,7 +650,11 @@
        UP from center to top-aligned (so the nav has room below the
        box on short phone viewports), and narrows the side branches. */
     @media (max-width: 480px) {
-      .hero            { align-items: flex-start; padding: 1.5rem var(--gutter); }
+      .hero            {
+        align-items: flex-start;
+        padding-top:    max(1.5rem, env(safe-area-inset-top));
+        padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+      }
       .hero-stack      { gap: var(--s-3); }
       .hero-box        { max-width: 280px; padding: 1.1rem; gap: var(--s-2); }
       .hero-box .logo  { max-width: 160px; max-height: 80px; }
@@ -664,7 +686,10 @@
        these, the bottom of the nav list falls below the fold. We shrink
        the logo / mascot / gaps so the whole stack fits in one screen. */
     @media (max-height: 800px) {
-      .hero            { padding: 0.75rem var(--gutter); }
+      .hero            {
+        padding-top:    max(0.75rem, env(safe-area-inset-top));
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+      }
       .hero-stack      { gap: var(--s-2); }
       .hero-box        { padding: 0.95rem; gap: 0.65rem; }
       .hero-box .logo  { max-width: 150px; max-height: 70px; margin: -0.5rem auto -0.8rem; }
