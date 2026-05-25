@@ -13,6 +13,7 @@ build_tracker.py
 
 # One-time build scripts (changes already applied to source HTML)
 add_subpage_bg.py
+add_cursor_trail.py
 
 # Source/uncompressed images — the optimized .jpg versions are what ship
 images/background2.png

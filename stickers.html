@@ -7,6 +7,7 @@
   <meta name="description" content="stickers — VISÃO. free stickers with every order.">
   <link rel="icon" type="image/png" href="/images/visao-mark.png">
   <link rel="apple-touch-icon" href="/images/visao-mark.png">
+  <link rel="preload" as="image" href="/images/background2fix.jpg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
@@ -183,6 +184,35 @@
       100% { transform: translate(var(--dx, 60px), 110vh) rotate(var(--rot, 90deg)); opacity: 0; }
     }
 
+
+    /* ===== VIEW TRANSITIONS — smooth crossfade between pages =====
+       Chrome 111+ / Safari 18+ automatically crossfade between same-
+       origin navigations when this rule is present. Older browsers
+       ignore it. Hides the "page rebuild" flash when going between
+       homepage and sub-pages. */
+    @view-transition { navigation: auto; }
+
+    /* ===== CURSOR TRAIL =====
+       Sakura petals + green leaves spawn at the cursor as you move.
+       Gated to cursor devices only via the script-side matchMedia
+       check (touch devices never run the listener). */
+    .cursor-trail {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9998;
+      will-change: transform, opacity;
+      animation: trail-drift 1.5s cubic-bezier(0.3, 0, 0.7, 1) forwards;
+    }
+    .cursor-trail svg { width: 100%; height: 100%; display: block; }
+    @keyframes trail-drift {
+      0%   { opacity: 0;
+             transform: translate(-50%, -50%) scale(0.4) rotate(0deg); }
+      15%  { opacity: var(--peak, 0.7);
+             transform: translate(-50%, -50%) scale(1) rotate(15deg); }
+      100% { opacity: 0;
+             transform: translate(-50%, -50%) translate(var(--dx, 0px), 45px) scale(0.6) rotate(var(--rot, 80deg)); }
+    }
+
   </style>
 </head>
 <body>
@@ -278,6 +308,49 @@
         if (document.hidden && timer) { clearTimeout(timer); timer = null; }
         else if (!document.hidden && !timer) { scheduleNext(); }
       });
+    })();
+  </script>
+
+
+  <script>
+    // CURSOR TRAIL — sakura + leaves following the mouse on cursor
+    // devices only. matchMedia gate means iPhone / iPad / Android never
+    // even register the mousemove listener.
+    (function() {
+      if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+      const SAKURA = '<svg viewBox="-15 -15 30 30" xmlns="http://www.w3.org/2000/svg">' +
+        '<g><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="#f4b8c8"/></g>' +
+        '<g transform="rotate(72)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="#f4b8c8"/></g>' +
+        '<g transform="rotate(144)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="#f4b8c8"/></g>' +
+        '<g transform="rotate(216)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="#f4b8c8"/></g>' +
+        '<g transform="rotate(288)"><path d="M 0 -2 C -6 -4 -7 -10 -3 -12 L -1 -10 L 0 -11 L 1 -10 L 3 -12 C 7 -10 6 -4 0 -2 Z" fill="#f4b8c8"/></g>' +
+        '<circle cx="0" cy="0" r="1.5" fill="#fff5b0"/></svg>';
+      const LEAF = '<svg viewBox="-2 -8 32 16" xmlns="http://www.w3.org/2000/svg">' +
+        '<path d="M 0 0 Q 6 -7 14 -6 Q 22 -5 28 -1 L 29 0 L 28 1 Q 22 5 14 6 Q 6 7 0 0 Z" fill="#6b9047"/></svg>';
+      let lastT = 0;
+      function onMove(e) {
+        const now = performance.now();
+        // Throttle to ~14 spawns/sec max — looks like a continuous trail
+        // without being a particle storm on fast mouse movement
+        if (now - lastT < 70) return;
+        lastT = now;
+        const p = document.createElement('div');
+        p.className = 'cursor-trail';
+        p.style.left = e.clientX + 'px';
+        p.style.top = e.clientY + 'px';
+        const isSakura = Math.random() < 0.65;
+        const sizeRoll = Math.random();
+        const size = sizeRoll < 0.4 ? 12 : (sizeRoll < 0.85 ? 18 : 26);
+        p.style.width = size + 'px';
+        p.style.height = (isSakura ? size : Math.round(size * 0.55)) + 'px';
+        p.style.setProperty('--dx', ((Math.random() - 0.5) * 30) + 'px');
+        p.style.setProperty('--rot', ((Math.random() < 0.5 ? -1 : 1) * (40 + Math.random() * 80)) + 'deg');
+        p.style.setProperty('--peak', (0.5 + Math.random() * 0.25).toFixed(2));
+        p.innerHTML = isSakura ? SAKURA : LEAF;
+        document.body.appendChild(p);
+        setTimeout(function() { p.remove(); }, 1600);
+      }
+      document.addEventListener('mousemove', onMove, { passive: true });
     })();
   </script>
 
