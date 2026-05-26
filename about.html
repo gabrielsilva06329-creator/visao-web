@@ -192,6 +192,40 @@
       color: var(--accent-gold); font-size: 0.85rem; margin-top: 1.5rem;
     }
 
+    /* === CONTACT — folded into the about page (no standalone /contact) === */
+    .contact-block {
+      max-width: 640px; margin: 0 auto; text-align: center;
+    }
+    .contact-block h2 {
+      font-weight: 700; font-size: clamp(1.5rem, 3vw, 2.4rem);
+      line-height: 1.1; letter-spacing: -0.02em; text-transform: lowercase;
+      margin: 1rem 0 1.5rem;
+    }
+    .contact-block p {
+      color: var(--text-secondary); font-size: 0.9rem;
+      line-height: 1.75; margin-bottom: 1.5rem;
+    }
+    .contact-email {
+      display: inline-block;
+      font-size: clamp(1.05rem, 2vw, 1.5rem);
+      font-weight: 500;
+      color: var(--accent-gold);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      margin: 0.5rem 0 2rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid transparent;
+      transition: color 0.18s ease, border-color 0.18s ease;
+    }
+    .contact-email:hover {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent-gold);
+    }
+    .contact-secondary {
+      font-size: 0.78rem; color: var(--text-muted);
+      margin-top: 1rem;
+    }
+
     /* === FOOTER === */
     footer {
       padding: 3rem 0 2rem;
@@ -379,11 +413,8 @@
       <li><a href="/shop">shop</a></li>
       <li><a href="/lookbook">lookbook</a></li>
       <li><a href="/archive">archive</a></li>
-      <li><a href="/about">about</a></li>
       <li><a href="/shipping">shipping</a></li>
-      <li><a href="/contact">contact</a></li>
-      <li><a href="/retail-stores">retail stores</a></li>
-      <li><a href="/stickers">stickers</a></li>
+      <li><a href="/about">about</a></li>
     </ul>
   </nav>
 
@@ -405,7 +436,7 @@
 
   <main>
     <!-- CRAFTSMANSHIP -->
-    <section class="block-wrap">
+    <section class="block-wrap" id="craft">
       <div class="block">
         <div class="ascii-rule section-divider"></div>
         <div class="craft">
@@ -439,7 +470,7 @@
     </section>
 
     <!-- HERITAGE -->
-    <section class="block-wrap">
+    <section class="block-wrap" id="heritage">
       <div class="block">
         <div class="ascii-rule section-divider"></div>
         <div class="heritage">
@@ -451,6 +482,20 @@
             <p>The brand is named in her language. Every piece is embroidered, never printed — because that's how she'd want it made.</p>
             <p class="heritage-signature">— Gabriel, founder</p>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT — lives inside /about (no standalone /contact in the nav) -->
+    <section class="block-wrap" id="contact">
+      <div class="block">
+        <div class="ascii-rule section-divider"></div>
+        <div class="contact-block">
+          <div class="label block-eyebrow">// fale com a gente · get in touch</div>
+          <h2>contact.</h2>
+          <p>for drops, wholesale, press, or anything else — drop us a line. we read every email.</p>
+          <a href="mailto:hello@visaoclothing.com" class="contact-email">hello@visaoclothing.com</a>
+          <p class="contact-secondary">or find us on social — links in the footer below.</p>
         </div>
       </div>
     </section>
@@ -488,18 +533,15 @@
       <div class="footer-col">
         <h4>about</h4>
         <ul>
-          <li><a href="/about">herança</a></li>
-          <li><a href="/about">craftsmanship</a></li>
-          <li><a href="/contact">contact</a></li>
+          <li><a href="#heritage">herança</a></li>
+          <li><a href="#craft">craftsmanship</a></li>
+          <li><a href="#contact">contact</a></li>
         </ul>
       </div>
       <div class="footer-col">
         <h4>support</h4>
         <ul>
-          <li><a href="/shipping">shipping</a></li>
-          <li><a href="/contact">returns</a></li>
-          <li><a href="/retail-stores">retail stores</a></li>
-          <li><a href="/stickers">stickers</a></li>
+          <li><a href="/shipping">shipping &amp; returns</a></li>
         </ul>
       </div>
     </div>
