@@ -117,7 +117,7 @@ Open the folder in VS Code, open Claude Code, then paste any of these:
 In index.html, change the hero tagline to "[new tagline]". Keep the styling.
 ```
 ```
-In index.html, update the heritage section copy to mention my grandmother Lourdes by name and her town in Minas Gerais. Keep the structure but write it as if I'm telling the story to a friend.
+In about.html, update the heritage section copy to tell the story of my sister Nathalie and me starting the brand together. Keep the structure but write it as if I'm telling the story to a friend.
 ```
 ```
 In index.html, change the craftsmanship stats. Replace "80k+ stitches per piece" with [new stat] and label it [new label]. Do the same for the other two stats.
