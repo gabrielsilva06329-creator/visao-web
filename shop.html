@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>shop · VISÃO</title>
-  <meta name="description" content="shop the sakura drop · VISÃO. embroidered, not printed. limited drops.">
+  <meta name="description" content="shop drop 001 · blood moon denim · VISÃO. 14oz embroidered, not printed. limited drops.">
   <link rel="icon" type="image/png" href="/images/visao-mark.png">
   <link rel="apple-touch-icon" href="/images/visao-mark.png">
   <link rel="preload" as="image" href="/images/background2fix.jpg">
@@ -243,6 +243,138 @@
     }
     .btn-fallback:hover { background: var(--accent-gold); color: var(--bg-primary); border-color: var(--accent-gold); }
 
+    /* === DROP COUNTDOWN === */
+    .drop-countdown {
+      border: 1px solid var(--border-strong);
+      background: rgba(0,0,0,0.55);
+      padding: clamp(2rem, 5vw, 3.5rem) 1.5rem;
+      margin-bottom: 3rem; text-align: center;
+    }
+    .drop-countdown .label { justify-content: center; margin-bottom: 1rem; }
+    .countdown-title {
+      font-weight: 700; font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.05; letter-spacing: -0.02em;
+      text-transform: lowercase; margin-bottom: 0.6rem;
+    }
+    .countdown-title em { color: var(--accent-gold); font-style: normal; }
+    .countdown-sub {
+      font-size: 0.72rem; color: var(--text-secondary);
+      letter-spacing: 0.1em; text-transform: lowercase; margin-bottom: 2rem;
+    }
+    .countdown-clock {
+      display: flex; justify-content: center; align-items: flex-start;
+      gap: 0.8rem; flex-wrap: nowrap; margin-bottom: 1.5rem;
+    }
+    .cd-unit { display: flex; flex-direction: column; align-items: center; min-width: 56px; }
+    .cd-num {
+      font-weight: 700; font-size: clamp(2rem, 7vw, 3.4rem);
+      color: var(--text-primary); line-height: 1; font-variant-numeric: tabular-nums;
+    }
+    .cd-lbl {
+      font-size: 0.58rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--text-muted); margin-top: 0.55rem;
+    }
+    .cd-sep {
+      font-weight: 700; font-size: clamp(1.6rem, 5vw, 2.6rem);
+      color: var(--accent-gold); line-height: 1.1;
+    }
+    .countdown-cta { font-size: 0.7rem; color: var(--text-muted); letter-spacing: 0.06em; }
+    .drop-live-badge { display: none; }
+    .drop-countdown.is-live .countdown-clock { display: none; }
+    .drop-countdown.is-live .drop-live-badge {
+      display: inline-flex; align-items: center; gap: 0.55rem;
+      color: var(--accent-gold); font-weight: 700; letter-spacing: 0.12em;
+      text-transform: uppercase; font-size: 1.05rem; margin-bottom: 1.2rem;
+    }
+
+    /* === FEATURED PRODUCT (single-drop hero) === */
+    .featured-product {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: clamp(1.5rem, 4vw, 3rem); align-items: start;
+    }
+    .fp-image {
+      aspect-ratio: 4/5; background: #0d0d0d; position: relative;
+      overflow: hidden; border: 1px solid var(--border-strong);
+    }
+    .fp-image::after {
+      content: attr(data-placeholder); position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      color: #777; font-size: 0.74rem; text-align: center;
+      padding: 1.5rem; line-height: 1.6; z-index: 0;
+    }
+    .fp-image img {
+      position: relative; z-index: 1;
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .fp-details { display: flex; flex-direction: column; gap: 1rem; }
+    .fp-name {
+      font-weight: 700; font-size: clamp(1.6rem, 4vw, 2.6rem);
+      line-height: 1.05; letter-spacing: -0.02em; text-transform: lowercase;
+    }
+    .fp-name em { color: var(--accent-gold); font-style: normal; }
+    .fp-desc { font-size: 0.82rem; color: var(--text-secondary); line-height: 1.7; }
+    .fp-price { font-weight: 700; font-size: 1.5rem; color: var(--accent-gold); }
+    .fp-sizes { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .fp-size-label { font-size: 0.72rem; color: var(--text-muted); margin-right: 0.3rem; text-transform: lowercase; }
+    .size-chip {
+      width: 2.6rem; height: 2.6rem; border: 1px solid var(--border-strong);
+      background: transparent; color: var(--text-primary);
+      font-family: inherit; font-size: 0.78rem; cursor: pointer;
+      transition: all 0.15s var(--ease-out);
+    }
+    .size-chip:hover, .size-chip.selected {
+      background: var(--accent-gold); color: var(--bg-primary); border-color: var(--accent-gold);
+    }
+    .btn-buy {
+      width: 100%; padding: 1rem; margin-top: 0.4rem;
+      background: var(--accent-gold); border: 1px solid var(--accent-gold);
+      color: var(--bg-primary); font-family: inherit; font-weight: 700;
+      font-size: 0.82rem; letter-spacing: 0.08em; text-transform: lowercase;
+      cursor: pointer; transition: all 0.15s var(--ease-out);
+    }
+    .btn-buy:hover { background: transparent; color: var(--accent-gold); }
+    .fp-shipnote { font-size: 0.7rem; color: var(--text-muted); line-height: 1.6; margin-top: 0.2rem; }
+
+    /* === EMAIL CAPTURE (teaser phase) === */
+    .email-capture { flex-direction: column; gap: 0.8rem; }
+    .ec-label { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: lowercase; color: var(--text-secondary); }
+    .ec-row { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .ec-input {
+      flex: 1; min-width: 0; padding: 0.85rem 1rem;
+      background: rgba(0,0,0,0.5); border: 1px solid var(--border-strong);
+      color: var(--text-primary); font-family: inherit; font-size: 0.8rem;
+    }
+    .ec-input::placeholder { color: var(--text-muted); }
+    .ec-input:focus { outline: none; border-color: var(--accent-gold); }
+    .ec-btn {
+      padding: 0.85rem 1.6rem; background: var(--accent-gold);
+      border: 1px solid var(--accent-gold); color: var(--bg-primary);
+      font-family: inherit; font-weight: 700; font-size: 0.78rem;
+      letter-spacing: 0.06em; text-transform: lowercase; cursor: pointer;
+      transition: all 0.15s var(--ease-out); white-space: nowrap;
+    }
+    .ec-btn:hover { background: transparent; color: var(--accent-gold); }
+    .ec-note { font-size: 0.68rem; color: var(--text-muted); line-height: 1.6; }
+    .ec-success { display: none; color: var(--accent-gold); font-size: 0.82rem; letter-spacing: 0.04em; padding: 0.5rem 0; }
+    .email-capture.done .ec-row, .email-capture.done .ec-note { display: none; }
+    .email-capture.done .ec-success { display: block; }
+
+    /* === DROP PHASE VISIBILITY ===
+       Controlled by the class on <body>:
+         phase-teaser   → countdown + email capture only (price/buy hidden)
+         phase-preorder → price + sizes + buy button live
+       To open pre-orders, change body class "phase-teaser" → "phase-preorder". */
+    .email-capture { display: none; }
+    body.phase-teaser .fp-price,
+    body.phase-teaser .fp-sizes,
+    body.phase-teaser .buy-button-slot,
+    body.phase-teaser .fp-shipnote { display: none; }
+    body.phase-teaser .email-capture { display: flex; }
+
+    @media (max-width: 768px) {
+      .featured-product { grid-template-columns: 1fr; }
+    }
+
     /* === RESPONSIVE === */
     @media (max-width: 900px) {
       .product-grid { grid-template-columns: repeat(2, 1fr); }
@@ -365,7 +497,9 @@
 
   </style>
 </head>
-<body>
+<!-- Drop phase: "phase-teaser" = countdown + email capture only.
+     Change to "phase-preorder" when early access opens (shows price + buy). -->
+<body class="phase-teaser">
   <!-- Tapestry image (blurred) + ambient sakura drift layer. -->
   <div class="subpage-bg-fixed"></div>
   <div class="drift-layer" id="driftLayer"></div>
@@ -409,94 +543,127 @@
     <div class="block">
       <div class="ascii-rule"></div>
 
-      <div class="block-header">
-        <div>
+      <!-- ============================================================
+           DROP COUNTDOWN
+           Counts down to early-access open. To change the date, edit
+           DROP_DATE in the <script> near the bottom of this file.
+           When the timer hits zero it auto-swaps to a "drop is live" badge.
+           ============================================================ -->
+      <section class="drop-countdown" id="dropCountdown">
+        <div class="label">// drop 001 · 根 raiz</div>
+        <h1 class="countdown-title">blood moon <em>denim</em></h1>
+        <p class="countdown-sub" id="cdSub">early access opens in</p>
+        <div class="countdown-clock" id="cdClock">
+          <div class="cd-unit"><span class="cd-num" id="cdDays">--</span><span class="cd-lbl">days</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cdHours">--</span><span class="cd-lbl">hrs</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cdMins">--</span><span class="cd-lbl">min</span></div>
+          <span class="cd-sep">:</span>
+          <div class="cd-unit"><span class="cd-num" id="cdSecs">--</span><span class="cd-lbl">sec</span></div>
+        </div>
+        <div class="drop-live-badge" id="cdLive"><span class="status-dot"></span>drop is live</div>
+        <p class="countdown-cta">limited run · embroidered to order</p>
+      </section>
+
+      <!-- ============================================================
+           FEATURED PRODUCT — Drop 001
+           To show the real jeans: save your mockup into /images/
+           (e.g. blood-moon-denim.jpg), then replace the .fp-image div
+           below with:
+             <div class="fp-image"><img src="/images/blood-moon-denim.jpg" alt="blood moon denim"><span class="product-tag">drop 001</span></div>
+           The live Shopify checkout mounts inside #buy-button-blood-moon.
+           ============================================================ -->
+      <section class="featured-product">
+        <div class="fp-image" data-placeholder="blood moon denim — save your mockup to /images/ and swap it in here">
+          <span class="product-tag">drop 001</span>
+        </div>
+        <div class="fp-details">
           <div class="drop-meta">
-            <span class="drop-status"><span class="status-dot"></span>live drop</span>
-            <span class="label">001 · 桜 sakura</span>
+            <span class="drop-status"><span class="status-dot"></span>pre-order</span>
+            <span class="label">001 · 根 raiz</span>
           </div>
-          <h2 class="block-title">the <em>sakura</em> collection</h2>
+          <h2 class="fp-name">blood moon <em>denim</em></h2>
+          <p class="fp-desc">14oz heavyweight black denim. the lone samurai beneath the blood moon, red cherry blossoms cascading down the leg. embroidered, never printed. a limited VISÃO drop.</p>
+          <div class="fp-price">$145</div>
+          <div class="fp-sizes">
+            <span class="fp-size-label">size:</span>
+            <button class="size-chip" type="button">S</button>
+            <button class="size-chip" type="button">M</button>
+            <button class="size-chip" type="button">L</button>
+            <button class="size-chip" type="button">XL</button>
+          </div>
+          <!-- Shopify Buy Button mounts here once wired. Fallback shows until then. -->
+          <div class="buy-button-slot" id="buy-button-blood-moon">
+            <button class="btn-buy" type="button">pre-order · $145</button>
+          </div>
+          <p class="fp-shipnote">pre-order · ships in 6–8 weeks. each piece is embroidered to order after the drop closes. real embroidery can't be rushed.</p>
+          <!-- TEASER-phase email capture. Shows only in phase-teaser.
+               NOTE: does NOT store emails yet — connect Klaviyo/Formspree
+               to capture for real (see chat). -->
+          <form class="email-capture" id="earlyAccessForm" novalidate>
+            <span class="ec-label">// get early access + drop alert</span>
+            <div class="ec-row">
+              <input type="email" class="ec-input" placeholder="your email" aria-label="email" required>
+              <button type="submit" class="ec-btn">notify me</button>
+            </div>
+            <p class="ec-note">join the early-access list. first pick on the drop + a discount when it opens.</p>
+            <p class="ec-success">// you're on the list. watch your inbox.</p>
+          </form>
         </div>
-      </div>
-
-      <div class="shop-layout">
-        <!-- Cart sidebar -->
-        <aside class="cart-block">
-          <div class="cart-block-row cart-block-head">
-            <span>cart</span><span>$|usd</span>
-          </div>
-          <div class="cart-block-count"><span id="cartCount">0</span> items</div>
-          <div class="cart-block-actions">
-            <button onclick="alert('cart wiring coming soon')">[cart]</button>
-            <a href="/shop">[shop]</a>
-          </div>
-        </aside>
-
-        <div class="shop-main">
-          <div class="shop-filter">
-            <span class="item active">ALL</span><span class="sep">|</span>
-            <span class="item">POPULAR</span><span class="sep">|</span>
-            <span class="item">HOODIES</span><span class="sep">|</span>
-            <span class="item">TEES</span><span class="sep">|</span>
-            <span class="item">DENIM</span><span class="sep">|</span>
-            <span class="item">OUTERWEAR</span>
-          </div>
-
-          <div class="shop-collections">
-            collection:
-            <span class="chip">"sakura"</span> ·
-            <span class="chip">"raiz"</span> ·
-            <span class="chip">"brasil"</span> ·
-            <span class="chip">"koi"</span>
-          </div>
-
-          <div class="product-grid">
-            <article class="product-card" data-product-id="sakura-hoodie">
-              <div class="product-image" data-placeholder="sakura hoodie · back-embroidery shot">
-                <span class="product-tag">1 of 100</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura</h3>
-                <p class="product-subtitle">heavyweight hoodie · back embroidery · 80k stitches</p>
-                <div class="product-price">$165</div>
-                <div class="buy-button-slot" id="buy-button-sakura-hoodie">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-
-            <article class="product-card" data-product-id="sakura-tee">
-              <div class="product-image" data-placeholder="sakura tee · front detail">
-                <span class="product-tag">1 of 150</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura tee</h3>
-                <p class="product-subtitle">boxy heavyweight · chest embroidery</p>
-                <div class="product-price">$85</div>
-                <div class="buy-button-slot" id="buy-button-sakura-tee">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-
-            <article class="product-card" data-product-id="sakura-denim">
-              <div class="product-image" data-placeholder="sakura denim · embroidered leg">
-                <span class="product-tag">1 of 50</span>
-              </div>
-              <div class="product-info">
-                <h3 class="product-name">the sakura denim</h3>
-                <p class="product-subtitle">raw selvedge · embroidered leg panel</p>
-                <div class="product-price">$185</div>
-                <div class="buy-button-slot" id="buy-button-sakura-denim">
-                  <button class="btn-fallback">[ reserve ]</button>
-                </div>
-              </div>
-            </article>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   </main>
+
+  <!-- DROP COUNTDOWN + size-chip selection -->
+  <script>
+    (function() {
+      // ============ SET YOUR DROP DATE HERE ============
+      // Placeholder date. Change this to your real early-access open
+      // date/time once the sample is in hand. The "-04:00" is Eastern
+      // Time (EDT). Format: 'YYYY-MM-DDTHH:MM:SS-04:00'
+      const DROP_DATE = new Date('2026-06-27T19:00:00-04:00');
+      // =================================================
+      const ids = ['cdDays','cdHours','cdMins','cdSecs'].map(i => document.getElementById(i));
+      const wrap = document.getElementById('dropCountdown');
+      const sub = document.getElementById('cdSub');
+      const pad = n => String(n).padStart(2,'0');
+      function tick() {
+        const diff = DROP_DATE - new Date();
+        if (diff <= 0) {
+          if (wrap) wrap.classList.add('is-live');
+          if (sub) sub.textContent = 'early access is open now';
+          return;
+        }
+        const d = Math.floor(diff / 86400000);
+        const h = Math.floor((diff % 86400000) / 3600000);
+        const m = Math.floor((diff % 3600000) / 60000);
+        const s = Math.floor((diff % 60000) / 1000);
+        const vals = [d, h, m, s];
+        ids.forEach((el, i) => { if (el) el.textContent = pad(vals[i]); });
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+    // Size selection (visual only until the Shopify Buy Button is wired)
+    document.querySelectorAll('.size-chip').forEach(b => {
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.size-chip').forEach(x => x.classList.remove('selected'));
+        b.classList.add('selected');
+      });
+    });
+    // Early-access email form. Shows a confirmation only — it does NOT
+    // store emails yet. Connect Klaviyo/Formspree to capture for real.
+    const eaForm = document.getElementById('earlyAccessForm');
+    if (eaForm) {
+      eaForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const input = eaForm.querySelector('.ec-input');
+        if (!input.value || !input.value.includes('@')) { input.focus(); return; }
+        eaForm.classList.add('done');
+      });
+    }
+  </script>
 
   <script>
     // Ambient falling-petal drift — mirrors the homepage atmosphere on
