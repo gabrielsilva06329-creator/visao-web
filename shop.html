@@ -371,6 +371,11 @@
     body.phase-teaser .fp-shipnote { display: none; }
     body.phase-teaser .email-capture { display: flex; }
 
+    /* The Shopify Buy Button renders its own size selector, so hide the
+       decorative custom chips once the real button is in play (preorder). */
+    body:not(.phase-teaser) .fp-sizes { display: none; }
+    #buy-button-blood-moon { margin-top: 0.4rem; }
+
     @media (max-width: 768px) {
       .featured-product { grid-template-columns: 1fr; }
     }
@@ -593,9 +598,9 @@
             <button class="size-chip" type="button">L</button>
             <button class="size-chip" type="button">XL</button>
           </div>
-          <!-- Shopify Buy Button mounts here once wired. Fallback shows until then. -->
+          <!-- Shopify Buy Button mounts here (only in preorder/preview phase). -->
           <div class="buy-button-slot" id="buy-button-blood-moon">
-            <button class="btn-buy" type="button">pre-order · $145</button>
+            <div id="product-component-1779995794569"></div>
           </div>
           <p class="fp-shipnote">pre-order · ships in 6–8 weeks. each piece is embroidered to order after the drop closes. real embroidery can't be rushed.</p>
           <!-- TEASER-phase email capture. Shows only in phase-teaser.
@@ -619,6 +624,14 @@
   <script src="/drop-config.js"></script>
   <!-- DROP COUNTDOWN + size-chip selection -->
   <script>
+    // Preview override: visiting /shop?preview=preorder reveals the price +
+    // buy button privately so you can test checkout before launch. The public
+    // (no param) still sees the teaser. To go live for everyone, change the
+    // <body> class from "phase-teaser" to "phase-preorder".
+    if (new URLSearchParams(location.search).get('preview') === 'preorder') {
+      document.body.classList.remove('phase-teaser');
+      document.body.classList.add('phase-preorder');
+    }
     (function() {
       // Date comes from /drop-config.js (window.VISAO_DROP_DATE) so the
       // homepage and shop countdowns always match. Fallback kept just in case.
@@ -682,6 +695,87 @@
         }
       });
     }
+  </script>
+
+  <!-- ============================================================
+       SHOPIFY BUY BUTTON — Blood Moon Denim
+       Only initializes when the page is NOT in teaser mode (i.e. in
+       phase-preorder, or via ?preview=preorder), so teaser visitors
+       don't load the SDK. Font set to JetBrains Mono; img/title/price
+       hidden so it doesn't duplicate the product card above it — it
+       renders just the size selector + "pre-order" button.
+       ============================================================ -->
+  <script type="text/javascript">
+  /*<![CDATA[*/
+  (function () {
+    if (document.body.classList.contains('phase-teaser')) return;  // dormant in teaser
+    var scriptURL = 'https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js';
+    if (window.ShopifyBuy) {
+      if (window.ShopifyBuy.UI) { ShopifyBuyInit(); } else { loadScript(); }
+    } else { loadScript(); }
+    function loadScript() {
+      var script = document.createElement('script');
+      script.async = true;
+      script.src = scriptURL;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(script);
+      script.onload = ShopifyBuyInit;
+    }
+    function ShopifyBuyInit() {
+      var client = ShopifyBuy.buildClient({
+        domain: 'byyfwj-ys.myshopify.com',
+        storefrontAccessToken: 'ae7d98575a703cad4388c938fc96449c',
+      });
+      var GOLD = '#c9a961', GOLD_DK = '#b59857', BLACK = '#000000';
+      var btnStyle = {
+        "font-family": "JetBrains Mono, monospace",
+        "font-size": "14px", "letter-spacing": "0.05em",
+        "padding-top": "16px", "padding-bottom": "16px",
+        "color": BLACK,
+        ":hover": { "color": BLACK, "background-color": GOLD_DK },
+        "background-color": GOLD,
+        ":focus": { "background-color": GOLD_DK },
+        "border-radius": "0px"
+      };
+      ShopifyBuy.UI.onReady(client).then(function (ui) {
+        ui.createComponent('product', {
+          id: '16012438012207',
+          node: document.getElementById('product-component-1779995794569'),
+          moneyFormat: '%24%7B%7Bamount%7D%7D',
+          options: {
+            "product": {
+              "contents": { "img": false, "title": false, "price": false },
+              "styles": {
+                "product": { "@media (min-width: 601px)": { "max-width": "100%", "margin-left": "0", "margin-bottom": "0" } },
+                "button": btnStyle
+              },
+              "text": { "button": "pre-order" },
+              "googleFonts": ["JetBrains Mono"]
+            },
+            "modalProduct": {
+              "contents": { "img": false, "imgWithCarousel": true, "button": false, "buttonWithQuantity": true },
+              "styles": { "button": btnStyle },
+              "googleFonts": ["JetBrains Mono"]
+            },
+            "option": {},
+            "cart": {
+              "styles": { "button": btnStyle },
+              "text": { "total": "Subtotal", "button": "Checkout" },
+              "googleFonts": ["JetBrains Mono"]
+            },
+            "toggle": {
+              "styles": {
+                "toggle": { "font-family": "JetBrains Mono, monospace", "background-color": GOLD, ":hover": { "background-color": GOLD_DK }, ":focus": { "background-color": GOLD_DK } },
+                "count": { "font-size": "16px", "color": BLACK, ":hover": { "color": BLACK } },
+                "iconPath": { "fill": BLACK }
+              },
+              "googleFonts": ["JetBrains Mono"]
+            }
+          },
+        });
+      });
+    }
+  })();
+  /*]]>*/
   </script>
 
   <script>
