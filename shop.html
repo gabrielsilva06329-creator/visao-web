@@ -615,15 +615,14 @@
     </div>
   </main>
 
+  <!-- Drop date — single source of truth, shared with the homepage. -->
+  <script src="/drop-config.js"></script>
   <!-- DROP COUNTDOWN + size-chip selection -->
   <script>
     (function() {
-      // ============ SET YOUR DROP DATE HERE ============
-      // Placeholder date. Change this to your real early-access open
-      // date/time once the sample is in hand. The "-04:00" is Eastern
-      // Time (EDT). Format: 'YYYY-MM-DDTHH:MM:SS-04:00'
-      const DROP_DATE = new Date('2026-06-27T19:00:00-04:00');
-      // =================================================
+      // Date comes from /drop-config.js (window.VISAO_DROP_DATE) so the
+      // homepage and shop countdowns always match. Fallback kept just in case.
+      const DROP_DATE = new Date(window.VISAO_DROP_DATE || '2026-06-27T19:00:00-04:00');
       const ids = ['cdDays','cdHours','cdMins','cdSecs'].map(i => document.getElementById(i));
       const wrap = document.getElementById('dropCountdown');
       const sub = document.getElementById('cdSub');

@@ -17,6 +17,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 
+  <!-- Drop date — single source of truth, shared with /shop. -->
+  <script src="/drop-config.js"></script>
+
   <!-- =======================================================================
        SHOPIFY BUY BUTTON SDK
        Uncomment when ready to wire payments.
@@ -690,6 +693,10 @@
       .mascot-wrap     { max-width: 150px; margin: 0 auto 8px; }
       .hero-email-form input  { padding: 0.42rem 0.5rem; font-size: 0.62rem; }
       .hero-email-form button { padding: 0.42rem 0.6rem; }
+      .hero-countdown  { gap: 0.1rem; }
+      .hc-clock        { font-size: 1.02rem; }
+      .hc-label        { font-size: 0.48rem; }
+      .hc-clock .u     { font-size: 0.6rem; }
       .hero-social     { padding-top: 0.5rem; gap: 1.2rem; }
       .hero-social svg { width: 1rem; height: 1rem; }
       .left-nav        { gap: 0.28rem; }
@@ -703,6 +710,7 @@
       .hero-box .logo  { max-width: 110px; max-height: 50px; }
       .hero-box-tag    { font-size: 0.48rem; }
       .mascot-wrap     { max-width: 120px; margin: 0 auto 5px; }
+      .hc-clock        { font-size: 0.9rem; }
       .hero-social svg { width: 0.9rem; height: 0.9rem; }
       .hero-social     { gap: 1rem; }
       .left-nav        { gap: 0.22rem; }
@@ -841,6 +849,32 @@
       transition: background 0.18s ease;
     }
     .hero-email-form button:hover { background: var(--text-primary); }
+
+    /* Compact drop countdown — sits inside the hero box, above the email
+       field. Deliberately small so it fits the locked single-viewport box
+       (the big version lives on /shop). Date from /drop-config.js. */
+    .hero-countdown {
+      width: 100%;
+      display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
+      position: relative; z-index: 5;
+    }
+    .hc-label {
+      font-size: 0.56rem; letter-spacing: 0.12em; text-transform: lowercase;
+      color: var(--text-muted);
+    }
+    .hc-clock {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 1.3rem; line-height: 1; letter-spacing: 0.03em;
+      color: var(--accent-gold); font-variant-numeric: tabular-nums;
+    }
+    .hc-clock .u { font-size: 0.7rem; color: var(--text-secondary); font-weight: 400; }
+    .hc-live {
+      display: none; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-gold);
+    }
+    .hero-countdown.is-live .hc-clock,
+    .hero-countdown.is-live .hc-label { display: none; }
+    .hero-countdown.is-live .hc-live { display: inline-block; }
 
     /* =====================================================================
        HERO STACK — vertical column wrapper that holds the .hero-box AND
@@ -2070,6 +2104,15 @@
              class="mascot">
       </div>
 
+      <!-- Compact drop countdown — sits above the email field. Date pulled
+           from /drop-config.js (window.VISAO_DROP_DATE). When it hits zero it
+           swaps to a "drop is live" badge. -->
+      <div class="hero-countdown" id="heroCountdown">
+        <span class="hc-label">// early access opens in</span>
+        <span class="hc-clock"><span id="hcD">--</span><span class="u">d</span> <span id="hcH">--</span><span class="u">h</span> <span id="hcM">--</span><span class="u">m</span> <span id="hcS">--</span><span class="u">s</span></span>
+        <span class="hc-live">// drop is live</span>
+      </div>
+
       <div class="hero-email-wrap">
         <form class="hero-email-form" onsubmit="handleNewsletter(event)">
           <input type="email" placeholder="email for drop access" required aria-label="Email">
@@ -2193,22 +2236,55 @@
     // ===== 2. NEWSLETTER =====
     // Generalized to support multiple forms (hero box + manifesto).
     // Finds the .newsletter-success line within the form's own wrapper.
-    function handleNewsletter(e) {
+    async function handleNewsletter(e) {
       e.preventDefault();
       const form = e.target;
-      const email = form.querySelector('input').value;
+      const input = form.querySelector('input');
+      const email = (input.value || '').trim();
+      if (!email || !email.includes('@') || !email.includes('.')) { input.focus(); return; }
 
-      // TODO: Replace with real submission to Klaviyo / Shopify Email / Mailchimp
-      // Example for Klaviyo: fetch('https://manage.kmail-lists.com/...', { method: 'POST', body: ... })
-      console.log('Newsletter signup:', email);
-
-      const success = form.parentElement.querySelector('.newsletter-success');
-      if (success) {
-        success.classList.add('visible');
-        setTimeout(() => success.classList.remove('visible'), 4000);
+      // Same-origin relay → Klaviyo (beats ad blockers). See /api/subscribe.js
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email })
+        });
+        if (res.ok) {
+          const success = form.parentElement.querySelector('.newsletter-success');
+          if (success) {
+            success.classList.add('visible');
+            setTimeout(() => success.classList.remove('visible'), 5000);
+          }
+          form.reset();
+        } else {
+          input.value = ''; input.placeholder = 'try again';
+        }
+      } catch (err) {
+        input.placeholder = 'network error — retry';
       }
-      form.reset();
     }
+
+    // ===== HERO COUNTDOWN =====
+    // Pulls the date from /drop-config.js so it always matches /shop.
+    (function() {
+      const wrap = document.getElementById('heroCountdown');
+      if (!wrap) return;
+      const DROP_DATE = new Date(window.VISAO_DROP_DATE || '2026-06-27T19:00:00-04:00');
+      const elD = document.getElementById('hcD'), elH = document.getElementById('hcH'),
+            elM = document.getElementById('hcM'), elS = document.getElementById('hcS');
+      const pad = n => String(n).padStart(2, '0');
+      function tick() {
+        const diff = DROP_DATE - new Date();
+        if (diff <= 0) { wrap.classList.add('is-live'); return; }
+        if (elD) elD.textContent = pad(Math.floor(diff / 86400000));
+        if (elH) elH.textContent = pad(Math.floor((diff % 86400000) / 3600000));
+        if (elM) elM.textContent = pad(Math.floor((diff % 3600000) / 60000));
+        if (elS) elS.textContent = pad(Math.floor((diff % 60000) / 1000));
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
 
     // ===== 3. SCROLL REVEAL =====
     const observer = new IntersectionObserver((entries) => {
