@@ -652,15 +652,50 @@
         b.classList.add('selected');
       });
     });
-    // Early-access email form. Shows a confirmation only — it does NOT
-    // store emails yet. Connect Klaviyo/Formspree to capture for real.
+    // Early-access email form → Klaviyo (client-side subscription).
+    // Public company ID is safe to expose in front-end code.
     const eaForm = document.getElementById('earlyAccessForm');
     if (eaForm) {
-      eaForm.addEventListener('submit', e => {
+      const KLAVIYO_COMPANY_ID = 'Y8reLa';   // public API key / site ID
+      const KLAVIYO_LIST_ID = 'VTMznW';      // early-access list
+      eaForm.addEventListener('submit', async e => {
         e.preventDefault();
         const input = eaForm.querySelector('.ec-input');
-        if (!input.value || !input.value.includes('@')) { input.focus(); return; }
-        eaForm.classList.add('done');
+        const btn = eaForm.querySelector('.ec-btn');
+        const email = (input.value || '').trim();
+        if (!email || !email.includes('@') || !email.includes('.')) { input.focus(); return; }
+        const original = btn.textContent;
+        btn.disabled = true; btn.textContent = '...';
+        try {
+          const res = await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_COMPANY_ID, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
+            body: JSON.stringify({
+              data: {
+                type: 'subscription',
+                attributes: {
+                  custom_source: 'early access form',
+                  profile: {
+                    data: {
+                      type: 'profile',
+                      attributes: { email: email }
+                    }
+                  }
+                },
+                relationships: { list: { data: { type: 'list', id: KLAVIYO_LIST_ID } } }
+              }
+            })
+          });
+          if (res.ok) {                       // 202 Accepted
+            eaForm.classList.add('done');
+          } else {
+            btn.disabled = false; btn.textContent = original;
+            input.value = ''; input.placeholder = 'something went wrong — try again';
+          }
+        } catch (err) {
+          btn.disabled = false; btn.textContent = original;
+          input.placeholder = 'network error — retry';
+        }
       });
     }
   </script>
