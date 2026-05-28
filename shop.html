@@ -652,12 +652,11 @@
         b.classList.add('selected');
       });
     });
-    // Early-access email form → Klaviyo (client-side subscription).
-    // Public company ID is safe to expose in front-end code.
+    // Early-access email form → /api/subscribe (same-origin Vercel function).
+    // Posting to our own domain means ad blockers / tracker-blockers can't
+    // block it; the server function relays to Klaviyo where there's no blocker.
     const eaForm = document.getElementById('earlyAccessForm');
     if (eaForm) {
-      const KLAVIYO_COMPANY_ID = 'Y8reLa';   // public API key / site ID
-      const KLAVIYO_LIST_ID = 'VTMznW';      // early-access list
       eaForm.addEventListener('submit', async e => {
         e.preventDefault();
         const input = eaForm.querySelector('.ec-input');
@@ -667,26 +666,12 @@
         const original = btn.textContent;
         btn.disabled = true; btn.textContent = '...';
         try {
-          const res = await fetch('https://a.klaviyo.com/client/subscriptions/?company_id=' + KLAVIYO_COMPANY_ID, {
+          const res = await fetch('/api/subscribe', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'revision': '2024-10-15' },
-            body: JSON.stringify({
-              data: {
-                type: 'subscription',
-                attributes: {
-                  custom_source: 'early access form',
-                  profile: {
-                    data: {
-                      type: 'profile',
-                      attributes: { email: email }
-                    }
-                  }
-                },
-                relationships: { list: { data: { type: 'list', id: KLAVIYO_LIST_ID } } }
-              }
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email })
           });
-          if (res.ok) {                       // 202 Accepted
+          if (res.ok) {
             eaForm.classList.add('done');
           } else {
             btn.disabled = false; btn.textContent = original;
