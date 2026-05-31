@@ -12,6 +12,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
 
+  <!-- Klaviyo onsite tracking (public key Y8reLa) — powers Active on Site,
+       Viewed Product, and links subscribers' browsers to their email. -->
+  <script type="application/javascript" async src="https://static.klaviyo.com/onsite/js/Y8reLa/klaviyo.js"></script>
+
   <!-- SHOPIFY BUY BUTTON SDK — loaded so each product card's
        buy-button-slot can mount a Buy Button when wired. -->
   <!-- <script src="https://sdks.shopifycdn.com/buy-button/latest/buy-button-storefront.min.js"></script> -->
@@ -684,6 +688,8 @@
             body: JSON.stringify({ email: email })
           });
           if (res.ok) {
+            // Link this email to the browser's Klaviyo cookie (onsite tracking).
+            try { (window.klaviyo = window.klaviyo || []).push(['identify', { email: email }]); } catch (e) {}
             eaForm.classList.add('done');
           } else {
             btn.disabled = false; btn.textContent = original;
@@ -694,6 +700,19 @@
           input.placeholder = 'network error — retry';
         }
       });
+    }
+    // Klaviyo "Viewed Product" — only fire when the product is actually live
+    // (preorder / ?preview=preorder), never in teaser (no product shown yet).
+    if (!document.body.classList.contains('phase-teaser')) {
+      try {
+        (window.klaviyo = window.klaviyo || []).push(['track', 'Viewed Product', {
+          ProductName: 'Blood Moon Denim',
+          ProductID: 'blood-moon-denim',
+          Categories: ['Denim'],
+          Price: 145,
+          URL: location.href
+        }]);
+      } catch (e) {}
     }
   </script>
 

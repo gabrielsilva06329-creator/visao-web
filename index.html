@@ -20,6 +20,10 @@
   <!-- Drop date — single source of truth, shared with /shop. -->
   <script src="/drop-config.js"></script>
 
+  <!-- Klaviyo onsite tracking (public key Y8reLa) — powers Active on Site
+       and links subscribers' browsers to their email for launch flows. -->
+  <script type="application/javascript" async src="https://static.klaviyo.com/onsite/js/Y8reLa/klaviyo.js"></script>
+
   <!-- =======================================================================
        SHOPIFY BUY BUTTON SDK
        Uncomment when ready to wire payments.
@@ -2251,6 +2255,8 @@
           body: JSON.stringify({ email: email })
         });
         if (res.ok) {
+          // Link this email to the browser's Klaviyo cookie (onsite tracking).
+          try { (window.klaviyo = window.klaviyo || []).push(['identify', { email: email }]); } catch (e) {}
           const success = form.parentElement.querySelector('.newsletter-success');
           if (success) {
             success.classList.add('visible');
