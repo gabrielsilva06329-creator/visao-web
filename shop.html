@@ -398,6 +398,49 @@
       .featured-product { grid-template-columns: 1fr; }
     }
 
+    /* === HOW IT WORKS (3-step strip) === */
+    .how-it-works { margin-top: 3.5rem; }
+    .how-it-works .label { margin-bottom: 1.25rem; }
+    .hiw-steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border-strong); border: 1px solid var(--border-strong);
+    }
+    .hiw-step { background: rgba(0,0,0,0.72); padding: 1.5rem; }
+    .hiw-num {
+      font-size: 0.7rem; color: var(--accent-gold);
+      letter-spacing: 0.15em; display: block; margin-bottom: 0.6rem;
+    }
+    .hiw-step h3 {
+      font-size: 0.92rem; text-transform: lowercase;
+      letter-spacing: 0.02em; margin-bottom: 0.4rem;
+    }
+    .hiw-step p { font-size: 0.74rem; color: var(--text-secondary); line-height: 1.65; }
+    @media (max-width: 700px) {
+      .hiw-steps { grid-template-columns: 1fr; }
+    }
+
+    /* === FAQ (native details/summary accordion) === */
+    .faq { margin-top: 3.5rem; max-width: 760px; }
+    .faq .label { margin-bottom: 1.25rem; }
+    .faq-item { border: 1px solid var(--border); border-bottom: none; background: rgba(0,0,0,0.72); }
+    .faq-item:last-of-type { border-bottom: 1px solid var(--border); }
+    .faq-item summary {
+      cursor: pointer; list-style: none;
+      padding: 1rem 1.25rem; font-size: 0.82rem;
+      text-transform: lowercase; letter-spacing: 0.03em;
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      transition: color 0.15s ease;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: '+'; color: var(--accent-gold); font-weight: 700; flex-shrink: 0; }
+    .faq-item[open] summary::after { content: '\2212'; }
+    .faq-item summary:hover { color: var(--accent-gold); }
+    .faq-item p {
+      padding: 0 1.25rem 1.1rem; font-size: 0.78rem;
+      color: var(--text-secondary); line-height: 1.7; max-width: 640px;
+    }
+    .faq-item a { color: var(--accent-gold); }
+
     /* === RESPONSIVE === */
     @media (max-width: 900px) {
       .product-grid { grid-template-columns: repeat(2, 1fr); }
@@ -634,6 +677,57 @@
             <p class="ec-success">// you're on the list. watch your inbox.</p>
           </form>
         </div>
+      </section>
+
+      <!-- HOW IT WORKS — reframes the made-to-order wait as craftsmanship -->
+      <section class="how-it-works">
+        <div class="label">// how it works</div>
+        <div class="hiw-steps">
+          <div class="hiw-step">
+            <span class="hiw-num">01</span>
+            <h3>pre-order</h3>
+            <p>your order reserves your piece in the run. limited numbers, no restocks.</p>
+          </div>
+          <div class="hiw-step">
+            <span class="hiw-num">02</span>
+            <h3>embroidered for you</h3>
+            <p>after the drop closes, every piece is stitched to order. real thread, never printed.</p>
+          </div>
+          <div class="hiw-step">
+            <span class="hiw-num">03</span>
+            <h3>ships in 6 to 8 weeks</h3>
+            <p>tracked worldwide the moment it leaves. real embroidery can't be rushed.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ — answers the pre-order questions before they become emails -->
+      <section class="faq">
+        <div class="label">// faq</div>
+        <details class="faq-item">
+          <summary>when does my order ship?</summary>
+          <p>every piece is embroidered to order after the drop closes. allow 6 to 8 weeks from the close of the drop to your door. you get tracking the moment it ships.</p>
+        </details>
+        <details class="faq-item">
+          <summary>why does it take 6 to 8 weeks?</summary>
+          <p>because nothing is sitting in a warehouse. each pair is stitched after you order it, thread by thread, then quality checked and shipped. real embroidery can't be rushed, and we wouldn't want it to be.</p>
+        </details>
+        <details class="faq-item">
+          <summary>is payment taken now?</summary>
+          <p>yes. your payment at checkout reserves your piece in the run. change your mind before production starts and you get a full refund, no questions.</p>
+        </details>
+        <details class="faq-item">
+          <summary>what if the size is wrong?</summary>
+          <p>we exchange sizes free within 14 days of delivery, unworn with tags attached. we hold back a small reserve of each size for exactly this.</p>
+        </details>
+        <details class="faq-item">
+          <summary>do you ship internationally?</summary>
+          <p>yes, worldwide with tracking. international orders may be subject to customs duties or import taxes on arrival, which are the buyer's responsibility.</p>
+        </details>
+        <details class="faq-item">
+          <summary>can i return it?</summary>
+          <p>made to order means all sales are final once production starts, except size exchanges and defects. full policy on the <a href="/shipping">shipping page</a>.</p>
+        </details>
       </section>
     </div>
   </main>

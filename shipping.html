@@ -42,7 +42,7 @@
       background: transparent; color: var(--text-primary);
       font-family: var(--font-mono); font-weight: 400; line-height: 1.6;
       min-height: 100vh; min-height: 100svh;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
       padding: 5rem 1.5rem 3rem;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
     }
@@ -92,6 +92,33 @@
       animation: blink 1s step-end infinite;
     }
     @keyframes blink { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+
+    /* === POLICY BOXES (shipping + returns) === */
+    .policy-box {
+      border: 1px solid var(--border-strong); padding: 1.75rem 2rem;
+      max-width: 560px; width: 100%; text-align: left;
+      background: rgba(10, 10, 10, 0.6);
+      margin-bottom: 1.25rem;
+    }
+    .policy-head {
+      font-size: 0.78rem; letter-spacing: 0.1em; color: var(--accent-gold);
+      text-transform: lowercase; font-weight: 700; margin-bottom: 0.9rem;
+    }
+    .policy-text {
+      font-size: 0.8rem; color: var(--text-secondary); line-height: 1.75;
+      margin-bottom: 0.9rem;
+    }
+    .policy-item { margin-bottom: 0.9rem; }
+    .policy-item h3 {
+      font-size: 0.78rem; text-transform: lowercase; color: var(--text-primary);
+      letter-spacing: 0.04em; margin-bottom: 0.2rem; font-weight: 700;
+    }
+    .policy-item h3::before { content: '> '; color: var(--accent-gold); }
+    .policy-item p { font-size: 0.78rem; color: var(--text-secondary); line-height: 1.7; }
+    .policy-box .status-line { margin-top: 0.5rem; }
+    @media (max-width: 480px) {
+      .policy-box { padding: 1.25rem 1.1rem; }
+    }
     /* === HAMBURGER + FULL-SCREEN NAV OVERLAY === */
     .nav-toggle {
       position: fixed; top: 1.25rem; right: 1.25rem; z-index: 80;
@@ -236,10 +263,34 @@
   <a href="/" class="home-link">back home</a>
   <img src="/images/visao-logo.png" alt="VISÃO" class="logo">
   <div class="page-eyebrow">policy · logistics</div>
-  <h1 class="page-title">shipping</h1>
-  <div class="placeholder-box">
-    <p class="placeholder-text">domestic + international shipping coming soon. every piece is made to order and handmade, embroidered never printed, then shipped worldwide. because each drop is crafted to order, allow a little extra time before it ships.</p>
-    <span class="status-line"><span class="status-dot"></span>in development</span>
+  <h1 class="page-title">shipping + returns</h1>
+
+  <div class="policy-box">
+    <h2 class="policy-head">// shipping</h2>
+    <p class="policy-text">every piece is made to order, embroidered never printed, then shipped worldwide with tracking. because each piece is crafted after the drop closes, allow 6 to 8 weeks from close to your door.</p>
+    <p class="policy-text">domestic shipping is free on orders over $70. international rates are calculated at checkout. international orders may be subject to customs duties or import taxes on arrival, which are the buyer's responsibility.</p>
+  </div>
+
+  <div class="policy-box">
+    <h2 class="policy-head">// returns + exchanges</h2>
+    <p class="policy-text">every VISÃO piece is embroidered to order. when you order, your piece gets made for you. because of that:</p>
+    <div class="policy-item">
+      <h3>size exchanges</h3>
+      <p>wrong size? we exchange free within 14 days of delivery, as long as it's unworn with tags attached. we keep a small reserve of each size for exactly this.</p>
+    </div>
+    <div class="policy-item">
+      <h3>before production starts</h3>
+      <p>changed your mind? full refund, no questions. email contact@visaoclothing.com before the drop closes.</p>
+    </div>
+    <div class="policy-item">
+      <h3>after production starts</h3>
+      <p>all sales are final. your piece is being stitched specifically for you, so we can't restock it like a warehouse item.</p>
+    </div>
+    <div class="policy-item">
+      <h3>defects</h3>
+      <p>if anything arrives flawed, email a photo within 7 days and we'll replace it free. embroidery is handwork and we stand behind every stitch.</p>
+    </div>
+    <span class="status-line"><span class="status-dot"></span>questions? contact@visaoclothing.com</span>
   </div>
   <!-- Hamburger + full-screen overlay nav (jumps between sub-pages) -->
   <button class="nav-toggle" onclick="openNav()" aria-label="Open menu">
