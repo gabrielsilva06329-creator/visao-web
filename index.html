@@ -2290,7 +2290,16 @@
     (function() {
       const wrap = document.getElementById('heroCountdown');
       if (!wrap) return;
-      const DROP_DATE = new Date(window.VISAO_DROP_DATE || '2026-06-27T19:00:00-04:00');
+      const raw = window.VISAO_DROP_DATE;
+      const DROP_DATE = raw ? new Date(raw) : null;
+      const clock = wrap.querySelector('.hc-clock');
+      const label = wrap.querySelector('.hc-label');
+      // Coming-soon mode: no date set yet -> hide the clock.
+      if (!DROP_DATE || isNaN(DROP_DATE.getTime())) {
+        if (clock) clock.style.display = 'none';
+        if (label) label.textContent = '// drop coming soon';
+        return;
+      }
       const elD = document.getElementById('hcD'), elH = document.getElementById('hcH'),
             elM = document.getElementById('hcM'), elS = document.getElementById('hcS');
       const pad = n => String(n).padStart(2, '0');

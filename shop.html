@@ -746,11 +746,19 @@
     }
     (function() {
       // Date comes from /drop-config.js (window.VISAO_DROP_DATE) so the
-      // homepage and shop countdowns always match. Fallback kept just in case.
-      const DROP_DATE = new Date(window.VISAO_DROP_DATE || '2026-06-27T19:00:00-04:00');
-      const ids = ['cdDays','cdHours','cdMins','cdSecs'].map(i => document.getElementById(i));
+      // homepage and shop countdowns always match.
       const wrap = document.getElementById('dropCountdown');
       const sub = document.getElementById('cdSub');
+      const clock = document.getElementById('cdClock');
+      const raw = window.VISAO_DROP_DATE;
+      const DROP_DATE = raw ? new Date(raw) : null;
+      // Coming-soon mode: no date set yet -> hide the clock, no countdown.
+      if (!DROP_DATE || isNaN(DROP_DATE.getTime())) {
+        if (clock) clock.style.display = 'none';
+        if (sub) sub.textContent = 'drop coming soon · join the list';
+        return;
+      }
+      const ids = ['cdDays','cdHours','cdMins','cdSecs'].map(i => document.getElementById(i));
       const pad = n => String(n).padStart(2,'0');
       function tick() {
         const diff = DROP_DATE - new Date();
